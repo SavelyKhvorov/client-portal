@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "sdk": "video",
+    "platform": {
+      "web": {
+        "name": "Annual 180K",
+        "period": {
+          "start": "2024-01-03 00:00:00",
+          "end": "2024-12-28 23:59:59"
+        },
+        "limit": 180000,
+        "current": 190012,
+        "flag": "red",
+        "customerId": "asdfadfadfadfssxxxxxxxx"
+      },
+      "android": {
+        "name": "Monthly Startup Tier",
+        "period": {
+          "start": "2024-12-01 00:00:00",
+          "end": "2024-12-31 23:59:59"
+        },
+        "limit": 1000,
+        "current": 64
+      }
+    }
+  },
+  {
+    "id": 2,
+    "sdk": "audio",
+    "platform": {
+      "web": {
+        "name": "Annual 180K",
+        "period": {
+          "start": "2024-01-01 00:00:00",
+          "end": "2024-12-31 23:59:59"
+        },
+        "limit": 180000,
+        "customerId": "User123"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "sdk": "image",
+    "platform": {
+      "web": {
+        "name": "Pro Plan",
+        "period": {
+          "start": "2024-06-01 00:00:00",
+          "end": "2024-12-31 23:59:59"
+        },
+        "limit": 50000,
+        "current": 25000,
+        "flag": "green",
+        "customerId": "54321"
+      },
+      "ios": {
+        "name": "Starter Plan",
+        "period": {
+          "start": "2024-01-01 00:00:00",
+          "end": "2024-03-31 23:59:59"
+        },
+        "limit": 5000,
+        "current": 3200,
+        "customerId": "customer_saddadda"
+      }
+    }
+  },
+  {
+    "id": 4,
+    "sdk": "text",
+    "platform": {
+      "android": {
+        "name": "Basic Plan",
+        "period": {
+          "start": "2024-02-01 00:00:00",
+          "end": "2024-12-31 23:59:59"
+        },
+        "limit": 100000,
+        "current": 45000,
+        "flag": "yellow",
+        "customerId": "customer_123456789"
+      }
+    }
+  }
+]

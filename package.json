@@ -1,0 +1,23 @@
+{
+  "name": "client-portal",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "less": "^4.2.1",
+    "less-loader": "^12.2.0",
+    "unplugin-vue-router": "^0.10.9",
+    "vue": "^3.5.13",
+    "vue-auto-routing": "^1.0.1",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.5"
+  }
+}
