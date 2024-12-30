@@ -10,24 +10,20 @@
       @change="updateChart"
     />
 
-
-    <div>
+    <div class="chart-container">
       <apexchart
-            :key="chartKey"
-            type="line"
-            :options="chartOptions"
-            :series="chartSeries"
-            height="350"
-          />
+        type="line"
+        :options="chartStore.chartOptions"
+        :series="chartStore.chartSeries"
+        height="300"
+      />
     </div>
 
-
-
-    <p>Выбранный диапазон: {{ value1 }}</p>
   </div>
 </template>
 
 <script>
+import { useChartStore } from '@/stores/ChartStore.js';
 import VueDatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import ApexCharts from 'vue3-apexcharts';
@@ -35,9 +31,15 @@ import jsonData from '@/json/data.json';
 
 export default {
   components: { VueDatePicker, apexchart: ApexCharts },
+  setup() {
+    const chartStore = useChartStore();
+    return {
+      chartStore,
+      jsonData,
+    };
+  },
   data() {
     return {
-      chartKey: 0,
       value1: [],
       shortcuts: [
         {
@@ -54,7 +56,7 @@ export default {
             const end = new Date();
             const start = new Date();
             start.setDate(end.getDate() - 7);
-            this.value1 = [start, end]; 
+            this.value1 = [start, end];
             this.updateChart();
           },
         },
@@ -64,104 +66,42 @@ export default {
             const now = new Date();
             const start = new Date(now.getFullYear(), now.getMonth(), 1);
             const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-            this.value1 = [start, end]; 
+            this.value1 = [start, end];
             this.updateChart();
           },
         },
       ],
-      rawData: jsonData,
-      chartSeries: [
-        ],
-        chartOptions: {
-          chart: {
-            type: "line",
-            toolbar: { show: false },
-          },
-          xaxis: {
-            type: "datetime",
-            categories: [
-              new Date("2024-01-01").getTime(),
-              new Date("2024-01-02").getTime(),
-              new Date("2024-01-03").getTime(),
-              new Date("2024-01-04").getTime(),
-              new Date("2024-01-05").getTime(),
-            ],
-          },
-        },
-      chartOptions: {
-        chart: {
-          type: "line",
-          toolbar: { show: false },
-        },
-        xaxis: {
-          type: "datetime", 
-          categories: [], 
-          labels: {
-            datetimeFormatter: {
-              year: "yyyy",
-              month: "MMM yyyy",
-              day: "dd MMM",
-              hour: "HH:mm",
-            },
-          },
-        },
-        yaxis: {
-          title: { text: "Value" },
-        },
-        title: {
-          text: "Динамика данных",
-          align: "left",
-        },
-        tooltip: {
-          x: {
-            format: "dd MMM yyyy",
-          },
-        },
-      },
     };
   },
   methods: {
     updateChart() {
-        if (!this.value1 || !this.value1[0] || !this.value1[1]) {
-          console.log("Диапазон не выбран.");
-          return;
-        }
+      if (!this.value1 || !this.value1[0] || !this.value1[1]) {
+        console.log('Диапазон не выбран.');
+        return;
+      }
 
-        const [startDate, endDate] = this.value1.map((date) => new Date(date));
+      const [startDate, endDate] = this.value1.map((date) => new Date(date));
+      const filteredData = this.jsonData[0].platform.web.data.filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate >= startDate && itemDate <= endDate;
+      });
 
-        const filteredData = this.rawData[0].platform.web.data.filter((item) => {
-          const itemDate = new Date(item.date);
-          return itemDate >= startDate && itemDate <= endDate;
-        });
+      const data = filteredData.map((item) => item.value);
+      const categories = filteredData.map((item) => new Date(item.date).getTime());
 
-        this.chartSeries = [
-          {
-            name: "Web Data",
-            data: filteredData.map((item) => item.value),
-          },
-        ];
-
-        const newCategories = filteredData.map((item) =>
-          new Date(item.date).getTime()
-        );
-
-        this.chartOptions = {
-          ...this.chartOptions,
-          xaxis: {
-            ...this.chartOptions.xaxis,
-            categories: newCategories,
-          },
-        };
-
-        this.chartKey += 1; 
-      },
+      this.chartStore.updateChart(data, categories);
     },
+  },
   mounted() {
-    console.log("Raw data:", this.rawData);
-    this.updateChart(); 
+    this.updateChart();
   },
 };
 </script>
 
-<style>
+<style lang="less">
+.chart-container {
+  width: 1200px;
+  height: 300px;
+  margin: 0 auto;
+}
 </style>

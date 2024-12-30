@@ -18,6 +18,7 @@
     "highcharts-vue": "^2.0.1",
     "less": "^4.2.1",
     "less-loader": "^12.2.0",
+    "pinia": "^2.3.0",
     "plotly.js": "^2.35.3",
     "unplugin-vue-router": "^0.10.9",
     "vue": "^3.5.13",
