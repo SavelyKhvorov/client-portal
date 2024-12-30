@@ -91,6 +91,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   line-height: 1.4;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   &--red {
     border-color: @orange;
