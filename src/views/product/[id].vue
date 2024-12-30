@@ -10,6 +10,20 @@
       @change="updateChart"
     />
 
+    <div>
+      <label>Выберите платформы:</label>
+      <div>
+        <label><input type="checkbox" value="web" v-model="selectedPlatforms" /> Web</label>
+        <label><input type="checkbox" value="android" v-model="selectedPlatforms" /> Android</label>
+      </div>
+
+      <label>Выберите SDK:</label>
+      <div>
+        <label><input type="checkbox" value="video" v-model="selectedSdks" /> Video</label>
+        <label><input type="checkbox" value="audio" v-model="selectedSdks" /> Audio</label>
+      </div>
+    </div>
+
     <div class="chart-container">
       <apexchart
         type="line"
@@ -40,6 +54,8 @@ export default {
   },
   data() {
     return {
+      selectedPlatforms: ["web", "android"],
+      selectedSdks: ["video", "audio"],
       value1: [],
       shortcuts: [
         {
@@ -74,26 +90,77 @@ export default {
     };
   },
   methods: {
-    updateChart() {
-      if (!this.value1 || !this.value1[0] || !this.value1[1]) {
-        console.log('Диапазон не выбран.');
-        return;
-      }
+  updateChart() {
+    if (!this.value1 || !this.value1[0] || !this.value1[1]) {
+      console.log('Диапазон не выбран.');
+      return;
+    }
 
-      const [startDate, endDate] = this.value1.map((date) => new Date(date));
-      const filteredData = this.jsonData[0].platform.web.data.filter((item) => {
-        const itemDate = new Date(item.date);
-        return itemDate >= startDate && itemDate <= endDate;
+    const [startDate, endDate] = this.value1.map((date) => new Date(date));
+
+    const platforms = this.selectedPlatforms; 
+    const sdks = this.selectedSdks;
+
+    const combinedData = [];
+
+    this.jsonData.forEach((sdkData) => {
+      if (!sdks.includes(sdkData.sdk)) return;
+
+
+      platforms.forEach((platform) => {
+        const platformData = sdkData.platform[platform];
+        if (!platformData) return;
+
+        const filteredData = platformData.data.filter((item) => {
+          const itemDate = new Date(item.date);
+          return itemDate >= startDate && itemDate <= endDate;
+        });
+
+        combinedData.push({
+          name: `${sdkData.sdk} - ${platform}`, 
+          data: filteredData.map((item) => ({
+            x: new Date(item.date).getTime(), 
+            y: item.value, 
+          })),
+        });
       });
+    });
 
-      const data = filteredData.map((item) => item.value);
-      const categories = filteredData.map((item) => new Date(item.date).getTime());
+    const totalData = combinedData.flatMap((series) => series.data).reduce((acc, point) => {
+      const existingPoint = acc.find((p) => p.x === point.x);
+      if (existingPoint) {
+        existingPoint.y += point.y; 
+      } else {
+        acc.push({ ...point }); 
+      }
+      return acc;
+    }, []);
 
-      this.chartStore.updateChart(data, categories);
-    },
-  },
+    this.chartStore.updateChart(combinedData, totalData);
+  }
+},
   mounted() {
     this.updateChart();
+  },
+  watch: {
+    selectedPlatforms: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
+    selectedSdks: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
+    value1: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
   },
 };
 </script>

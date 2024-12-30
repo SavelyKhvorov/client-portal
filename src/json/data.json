@@ -4,18 +4,40 @@
     "platform": {
       "web": {
         "name": "Annual 180K",
-        "period": {
-          "start": "2024-01-01 00:00:00",
-          "end": "2024-12-31 23:59:59"
-        },
+        "period": { "start": "2024-01-01 00:00:00", "end": "2024-12-31 23:59:59" },
         "limit": 180000,
         "current": 15456,
         "data": [
           { "date": "2024-12-26", "value": 34 },
           { "date": "2024-12-27", "value": 56 },
-          { "date": "2024-12-28", "value": 78 },
-          { "date": "2024-12-29", "value": 12 },
-          { "date": "2024-12-30", "value": 45 }
+          { "date": "2024-12-28", "value": 78 }
+        ]
+      },
+      "android": {
+        "name": "Monthly Startup Tier",
+        "period": { "start": "2024-12-01 00:00:00", "end": "2024-12-31 23:59:59" },
+        "limit": 1000,
+        "current": 64,
+        "data": [
+          { "date": "2024-12-26", "value": 20 },
+          { "date": "2024-12-27", "value": 30 },
+          { "date": "2024-12-28", "value": 25 }
+        ]
+      }
+    }
+  },
+  {
+    "sdk": "audio",
+    "platform": {
+      "web": {
+        "name": "Annual 180K",
+        "period": { "start": "2024-01-01 00:00:00", "end": "2024-12-31 23:59:59" },
+        "limit": 180000,
+        "current": 8939,
+        "data": [
+          { "date": "2024-12-26", "value": 15 },
+          { "date": "2024-12-27", "value": 25 },
+          { "date": "2024-12-28", "value": 30 }
         ]
       }
     }

@@ -11,7 +11,7 @@
         <p class="login__subtitle">Please sign in to continue</p>
 
 
-        <form class="login__form" @submit="handleLogin">
+        <form class="login__form" @submit.prevent="handleLogin" novalidate>
           <div class="form__group">
             <label class="form__label" for="email">Email</label>
             <input 
@@ -21,7 +21,9 @@
               placeholder="Email" 
               required 
               class="form__input"
+              :class="{'input-error': errors.email}"
             />
+            <span v-if="errors.email" class="form__error">{{ errors.email }}</span>
           </div>
           <div class="form__group">
             <label class="form__label" for="password">Password</label>
@@ -32,7 +34,9 @@
               placeholder="Password" 
               required 
               class="form__input"
+              :class="{'input-error': errors.password}"
             />
+            <span v-if="errors.password" class="form__error">{{ errors.password }}</span>
             <a href="#" class="form__forgot-password">Forgot password?</a>
           </div>
 
@@ -58,14 +62,35 @@ export default {
     return {
       email: '',
       password: '',
+      errors: {}
     };
   },
   methods: {
     handleLogin() {
-      this.$router.push('/dashboard');
+      this.errors = {}; 
+
+      if (!this.email) {
+        this.errors.email = 'Email is required';
+      } else if (!this.isValidEmail(this.email)) {
+        this.errors.email = 'Please enter a valid email';
+      }
+
+      if (!this.password) {
+        this.errors.password = 'Password is required';
+      }
+
+      if (Object.keys(this.errors).length === 0) {
+        this.$router.push('/dashboard'); 
+      }
     },
+
     redirectToRegister() {
       this.$router.push('/registration');
+    },
+
+    isValidEmail(email) {
+      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      return re.test(email);
     },
   },
 };

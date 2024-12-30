@@ -33,19 +33,21 @@ export const useChartStore = defineStore('chart', {
     },
   }),
   actions: {
-    updateChart(data, categories) {
+    updateChart(seriesData, totalData) {
       this.chartSeries = [
+        ...seriesData,
         {
-          name: 'Web Data',
-          data,
-        },
+          name: "Total",
+          data: totalData
+        }
       ];
+    
       this.chartOptions = {
         ...this.chartOptions,
         xaxis: {
           ...this.chartOptions.xaxis,
-          categories,
-        },
+          categories: seriesData.flatMap((series) => series.data.map((d) => d.x))
+        }
       };
     },
   },

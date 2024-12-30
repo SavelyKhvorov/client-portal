@@ -20,7 +20,7 @@
 
       
       <div class="page-header__actions">
-        <button class="page-header__login-button">Sign in</button>
+        <button @click="SignIn" class="page-header__login-button">Sign in</button>
         <button class="page-header__trial-button">GET FREE TRIAL</button>
       </div>
     </div>
@@ -45,6 +45,11 @@ export default {
       ],
     };
   },
+  methods: {
+    SignIn(){
+      this.$router.push('/login');
+    }
+  }
 };
 </script>
 

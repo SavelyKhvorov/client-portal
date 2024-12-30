@@ -21,6 +21,7 @@
     "pinia": "^2.3.0",
     "plotly.js": "^2.35.3",
     "unplugin-vue-router": "^0.10.9",
+    "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
     "vue-auto-routing": "^1.0.1",
     "vue-cal": "^4.10.0",
@@ -33,7 +34,8 @@
     "vue-router": "^4.5.0",
     "vue3-apexcharts": "^1.8.0",
     "vue3-datepicker": "^0.4.0",
-    "vue3-daterange-picker": "^1.0.1"
+    "vue3-daterange-picker": "^1.0.1",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

@@ -4,18 +4,21 @@
 
       <div class="registration__card">
 
-        <!-- <SvgOrangeWaves class="SvgOrangeWaves"/>
-        <SvgYellowVaves class="SvgYellowWaves"/>
-        <SvgBlueStain class="SvgBlueStain"/> -->
-        
+        <!-- <div class="registration__svg-container">
+          <SvgOrangeWaves class="SvgOrangeWaves" />
+          <SvgYellowWaves class="SvgYellowWaves" />
+          <SvgBlueStain class="SvgBlueStain" />
+        </div> -->
+
         <h1 class="registration__title">Join us today!</h1>
         <p class="registration__subtitle">Create your account to get started</p>
 
-        <form class="registration__form" @submit.prevent="handleRegistration">
+        <form class="registration__form" @submit.prevent="handleRegistration" novalidate>
           <div class="form__grid">
             <div class="form__group">
               <label class="form__label" for="name">Name</label>
-              <input id="name" v-model="name" type="text" class="form__input" placeholder="Your Name" required />
+              <input id="name" v-model="name" type="text" class="form__input" placeholder="Your Name" required :class="{'input-error': errors.name}" />
+              <span v-if="errors.name" class="form__error">{{ errors.name }}</span>
             </div>
 
             <div class="form__group">
@@ -48,15 +51,22 @@
               <select id="feature" v-model="feature" class="form__input" required>
                 <option disabled value="">Select</option>
                 <option>Blur/Replace/Remove Background</option>
-                <option>Smart Zoom</option>
+                <option>Smart Zoom (Auto framing)</option>
+                <option>Beautification</option>
                 <option>Sharpness</option>
                 <option>Low Light</option>
+                <option>Color correction</option>
+                <option>Lower thirds</option>
+                <option>Layouts</option>
+                <option>Objects (Emoji)</option>
+                <option>Overlays</option>
               </select>
             </div>
 
             <div class="form__group">
               <label class="form__label" for="email">Business Email</label>
-              <input id="email" v-model="email" type="email" class="form__input" placeholder="Your Email" required />
+              <input id="email" v-model="email" type="email" class="form__input" placeholder="Your Email" required :class="{'input-error': errors.email}"/>
+              <span v-if="errors.email" class="form__error">{{ errors.email }}</span>
             </div>
 
             <div class="form__group">
@@ -66,18 +76,20 @@
 
             <div class="form__group">
               <label class="form__label" for="password">Password</label>
-              <input id="password" v-model="password" type="password" class="form__input" placeholder="Your Password" required />
+              <input id="password" v-model="password" type="password" class="form__input" placeholder="Your Password" required :class="{'input-error': errors.password}"/>
+              <span v-if="errors.password" class="form__error">{{ errors.password }}</span>
             </div>
 
             <div class="form__group">
               <label class="form__label" for="password-confirm">Password Confirmation</label>
-              <input id="password-confirm" v-model="passwordConfirm" type="password" class="form__input" placeholder="Confirm Your Password" required />
+              <input id="password-confirm" v-model="passwordConfirm" type="password" class="form__input" placeholder="Confirm Your Password" required :class="{'input-error': errors.passwordConfirm}"/>
+              <span v-if="errors.passwordConfirm" class="form__error">{{ errors.passwordConfirm }}</span>
             </div>
           </div>
 
           <div class="form__group--area">
             <label class="form__label" for="project">Please describe your project</label>
-            <textarea id="project" v-model="projectDescription" class="form__input" placeholder="Project Description" rows="4" required></textarea>
+            <textarea id="project" v-model="projectDescription" class="form__input textarea" placeholder="Project Description" rows="4"></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary">Create account</button>
@@ -110,15 +122,42 @@ export default {
       password: '',
       passwordConfirm: '',
       projectDescription: '',
+      errors: {},
     };
   },
   methods: {
-    handleRegistration() {
-      if (this.password !== this.passwordConfirm) {
-        alert('Passwords do not match!');
-        return;
+    validateForm() {
+      this.errors = {};
+
+      if (!this.name) {
+        this.errors.name = "Name is required";
       }
-      this.$router.push('/dashboard');
+      if (!this.email) {
+        this.errors.email = "Email is required";
+      } else if (!this.validEmail(this.email)) {
+        this.errors.email = "Email is invalid";
+      }
+      if (!this.password) {
+        this.errors.password = "Password is required";
+      } else if (this.password.length < 8) {
+        this.errors.password = "Password must be at least 8 characters";
+      }
+      if (this.passwordConfirm !== this.password) {
+        this.errors.passwordConfirm = "Passwords do not match";
+      }
+    },
+
+    validEmail(email) {
+      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      return re.test(email);
+    },
+
+    handleRegistration() {
+      this.validateForm();     
+      if (Object.keys(this.errors).length === 0) {
+        alert("Form submitted successfully!");
+        this.$router.push('/dashboard');
+      }
     },
   },
 };
@@ -136,6 +175,7 @@ export default {
   }
 
   &__card {
+    position: relative;
     background: @white;
     border-radius: 12px;
     padding: 32px;
@@ -143,6 +183,15 @@ export default {
     max-width: 800px;
     width: 100%;
     text-align: center;
+  }
+
+  &__svg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
   }
 
   &__title {
@@ -199,6 +248,10 @@ export default {
       border-color: #4a90e2;
       box-shadow: 0 0 4px rgba(74, 144, 226, 0.5);
     }
+
+    &.textarea{
+      resize: vertical;
+    }
   }
 }
 
@@ -235,26 +288,36 @@ export default {
 }
 
 .SvgBlueStain {
-    position: absolute;
-    top: 40px;
-    left: 50px;
-    width: 100px; // Подгоните размер
-    height: auto;
-  }
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 160px;
+  height: auto;
+}
 
-  .SvgOrangeWaves {
-    position: absolute;
-    bottom: -50px;
-    left: 20px;
-    width: 120px; // Подгоните размер
-    height: auto;
-  }
+.SvgOrangeWaves {
+  position: absolute;
+  top: -20px;
+  right: -60px;
+  width: 150px;
+  height: auto;
+}
 
-  .SvgYellowWaves {
-    position: absolute;
-    top: 50px;
-    right: -40px;
-    width: 80px; // Подгоните размер
-    height: auto;
-  }
+.SvgYellowWaves {
+  position: absolute;
+  bottom: -20px;
+  left: -90px;
+  width: 150px;
+  height: auto;
+}
+
+.form__error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.input-error {
+  border-color: #e74c3c;
+}
 </style>
