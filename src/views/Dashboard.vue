@@ -20,7 +20,6 @@ export default {
 <style lang="less">
 .dashboard {
   &__container {
-    .container();
     padding: 0 100px 0 100px;
   }
 

@@ -24,7 +24,7 @@ export const useChartStore = defineStore('chart', {
         title: { text: 'Value' },
       },
       title: {
-        text: 'Динамика данных',
+        text: 'Analytics',
         align: 'left',
       },
       tooltip: {

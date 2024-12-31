@@ -171,7 +171,6 @@ export default {
     justify-content: center;
     align-items: center;
     min-height: 140vh;
-    background-color: #f9f9f9;
   }
 
   &__card {
