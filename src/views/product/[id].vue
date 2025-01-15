@@ -39,8 +39,8 @@
           class="prod__calendar"
         />
         <div class="prod__analytics-buttons">
-          <button class="btn chart-button">Chart 1</button>
-          <button class="btn chart-button">Chart 2</button>
+          <button class="btn chart-button" @click="switchChart('chart1')">Chart 1</button>
+          <button class="btn chart-button" @click="switchChart('chart2')">Chart 2</button>
         </div>
       </div>
 
@@ -83,6 +83,7 @@ export default {
       selectedPlatforms: [],
       selectedSdks: [],
       value1: [],
+      currentChartType: 'chart1',
       shortcuts: [
       {
           text: 'Month',
@@ -187,7 +188,6 @@ export default {
         const platformKeys = Object.keys(this.productData.platform);
         this.selectedPlatforms = platformKeys;
 
-        this.updateChart(); 
       } else {
         console.error('Product data not found for id:', id);
       }
@@ -222,18 +222,44 @@ export default {
 
       return predictedEndDate.toISOString().split("T")[0];
     },
+    switchChart(type) {
+      this.currentChartType = type;
+      if (type === 'chart1') {
+        const predictedEndDate = this.calculateEndDate();
+
+        if (predictedEndDate !== "Unknown") {
+          const subscriptionStartDate = new Date(this.productData.platform[this.selectedPlatformKey].period.start);
+          const endDate = new Date(predictedEndDate);
+          endDate.setDate(endDate.getDate() + 10); 
+
+          this.value1 = [subscriptionStartDate, endDate];
+          this.updateChart(); 
+        } else {
+          console.error("Unable to calculate the predicted end date.");
+        }
+      } else if (type === 'chart2') {
+        const now = new Date();
+        const start = new Date(now);
+        start.setMonth(now.getMonth() - 3);
+        this.value1 = [start, now];
+      }
+      this.updateChart();
+    },
 
     updateChart() {
-      if (!this.productData) {
-        console.warn('No product data available. Skipping chart update.');
-        return;
-      }
+    if (!this.productData) {
+      console.warn('No product data available. Skipping chart update.');
+      return;
+    }
 
-      const [startDate, endDate] = this.value1.map((date) => new Date(date));
-      const combinedData = [];
+    const [startDate, endDate] = this.value1.map((date) => new Date(date));
+    const combinedData = [];
+    let annotations = [];
+
+    // Проверка типа текущего графика
+    if (this.currentChartType === 'chart1') {
       let totalLimit = 0;
       let totalCurrent = 0;
-      let annotations = [];
 
       this.selectedPlatforms.forEach((platform) => {
         const platformData = this.productData.platform[platform];
@@ -306,9 +332,45 @@ export default {
       });
 
       this.chartStore.updateChart(combinedData, annotations);
-    },
 
-    
+    } else if (this.currentChartType === 'chart2') {
+      // Логика для второго типа графика (updateChart2)
+      const platform = this.selectedPlatformKey;
+      if (!platform) {
+        console.warn('No platform data found');
+        return;
+      }
+
+      const platformData = this.productData.platform[platform];
+      if (!platformData) {
+        console.warn(`No platform data found for platform: ${platform}`);
+        return;
+      }
+
+      const dataByDate = platformData.data.reduce((acc, item) => {
+        const dateStr = new Date(item.date).toISOString().split('T')[0];
+        acc[dateStr] = item.value;
+        return acc;
+      }, {});
+
+      const filledData = [];
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        filledData.push({
+          x: new Date(dateStr).getTime(),
+          y: dataByDate[dateStr] || 0,
+        });
+      }
+
+      const chartData = [{
+        name: `${this.productData.sdk} - ${platform}`,
+        data: filledData,
+      }];
+
+      this.chartStore.updateChart(chartData, []);
+    }
+  },
+
   },
 
   computed: {
@@ -340,7 +402,6 @@ export default {
   
   },
   mounted() {
-    this.updateChart();
     this.fetchProductData(); 
     const predictedEndDate = this.calculateEndDate();
     console.log("Predicted End Date:", predictedEndDate);

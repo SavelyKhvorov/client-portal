@@ -20,9 +20,6 @@ export const useChartStore = defineStore('chart', {
           },
         },
       },
-      yaxis: {
-        title: { text: 'Expected usage' },
-      },
       title: {
         text: 'Analytics',
         align: 'left',
