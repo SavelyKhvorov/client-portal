@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-export const useChartStore = defineStore('chart', {
+export const useAnalyticsStore = defineStore('analytics-chart', {
   state: () => ({
     chartSeries: [],
     chartOptions: {
@@ -21,7 +21,7 @@ export const useChartStore = defineStore('chart', {
         },
       },
       yaxis: {
-        title: { text: 'Expected usage' },
+        title: { text: 'Sessions per day' },
       },
       title: {
         text: 'Analytics',
@@ -33,9 +33,13 @@ export const useChartStore = defineStore('chart', {
     },
   }),
   actions: {
-    updateChart(seriesData, annotations=[]) {
+    updateChart(seriesData, totalData) {
       this.chartSeries = [
         ...seriesData,
+        {
+          name: "Total",
+          data: totalData
+        }
       ];
     
       this.chartOptions = {
@@ -43,9 +47,6 @@ export const useChartStore = defineStore('chart', {
         xaxis: {
           ...this.chartOptions.xaxis,
           categories: seriesData.flatMap((series) => series.data.map((d) => d.x))
-        },
-        annotations: {
-          xaxis:  annotations
         },
       };
     },

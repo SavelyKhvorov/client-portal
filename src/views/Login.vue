@@ -198,7 +198,7 @@ export default {
 
 .btn-primary {
   background-color: @blue2;
-  color: white;
+  color: @white;
   border: none;
   &:hover{
     background-color: @blue2;

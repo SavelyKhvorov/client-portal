@@ -1,0 +1,26 @@
+[
+  {
+    "sdk": "video",
+    "description": "The Video SDK is a powerful tool that offers a wide variety of advanced features to enhance your video-related projects. Whether you're looking to integrate streaming, live broadcasting, or video editing capabilities into your app, our SDK provides everything you need. With flexible APIs and support for a multitude of video formats, the Video SDK allows developers to create immersive experiences. Our goal is to help you build innovative solutions that will impress your users. Enjoy seamless integration, robust performance, and a variety of options tailored to your specific needs. Join the community of developers and experience the next level of video technology."
+  },
+  {
+    "sdk": "audio",
+    "description": "The Audio SDK is designed to offer comprehensive solutions for managing and processing audio in real-time. Whether you're working on a music streaming app, voice recording software, or interactive gaming experience, this SDK provides the tools necessary for high-quality audio handling. It supports streaming, playback, and advanced audio processing features, making it ideal for applications that require a high level of sound precision. With easy-to-use libraries and extensive platform support, this SDK ensures that audio is seamlessly integrated into your application, delivering the best possible user experience. Unlock the full potential of your audio projects with our versatile and powerful Audio SDK."
+  },
+  {
+    "sdk": "image",
+    "description": "The Image SDK is a versatile toolset designed to facilitate image processing and manipulation through a wide range of algorithms. Whether you're developing an app that involves simple image editing, such as cropping and resizing, or more complex operations like image recognition, manipulation, and filtering, our SDK has you covered. It offers a wealth of features for optimizing, transforming, and enhancing images to suit your needs. With support for a variety of image formats and integration options, the Image SDK empowers developers to create sophisticated visual experiences that will leave a lasting impression on users."
+  },
+  {
+    "name": "Annual 180K",
+    "description": "The 'Annual 180K' subscription is designed for those who need extensive usage of our Video SDK. With this plan, you gain access to up to 180,000 video processing units per year, making it perfect for high-volume applications. Whether you're running a large-scale platform or need to integrate video features into an enterprise-level project, this subscription provides you with the flexibility and resources to support your growing business needs. Enjoy uninterrupted access to cutting-edge video technology, with priority support and regular updates to ensure you're always working with the latest features. A perfect choice for organizations that require reliable and scalable video solutions."
+  },
+  {
+    "name": "Pro Plan",
+    "description": "The 'Pro Plan' is the ideal choice for developers who demand advanced features and extended functionality. Whether you're working with complex image processing tasks or need to integrate sophisticated audio features into your app, the Pro Plan ensures that you have all the tools at your disposal. Offering a rich set of capabilities, this plan is designed for professionals who want to push the limits of what can be achieved with our SDKs. You’ll enjoy full access to premium features, higher resource limits, and enhanced support, ensuring your project’s success. Choose the Pro Plan to experience the ultimate in SDK technology and support."
+  },
+  {
+    "name": "Basic Plan",
+    "description": "The 'Basic Plan' offers a more entry-level solution for developers who need the essential features without any of the extras. This plan is designed for small to medium-scale projects, where you may need access to core functionalities such as image editing or basic video processing. It’s perfect for startups or individuals who want to get started without a significant upfront cost. While the Basic Plan provides limited resources compared to higher-tier options, it still offers access to powerful SDK tools that will help you build solid applications. Get started on your journey with the Basic Plan, and scale up as your needs grow."
+  }
+]
