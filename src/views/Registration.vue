@@ -152,11 +152,42 @@ export default {
       return re.test(email);
     },
 
-    handleRegistration() {
+    async handleRegistration() {
       this.validateForm();     
       if (Object.keys(this.errors).length === 0) {
         alert("Form submitted successfully!");
         this.$router.push('/dashboard');
+      }
+
+      // if (Object.keys(this.errors).length > 0) {
+      //   return;
+      // }
+
+      try {
+        const payload = {
+          name: this.name,
+          endUsers: this.endUsers,
+          platform: this.platform,
+          feature: this.feature,
+          email: this.email,
+          company: this.company,
+          password: this.password,
+          projectDescription: this.projectDescription,
+        };
+
+        const response = await axios.post('/api/register', payload);
+
+        if (response.status === 201) {
+          alert("Registration successful!");
+          this.$router.push('/dashboard');
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          this.errors.general = error.response.data.message || "Invalid registration data";
+        } else {
+          console.error("An error occurred:", error);
+          this.errors.general = "Something went wrong. Please try again later.";
+        }
       }
     },
   },
