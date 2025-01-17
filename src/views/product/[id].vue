@@ -256,7 +256,6 @@ export default {
     const combinedData = [];
     let annotations = [];
 
-    // Проверка типа текущего графика
     if (this.currentChartType === 'chart1') {
       let totalLimit = 0;
       let totalCurrent = 0;
@@ -334,7 +333,6 @@ export default {
       this.chartStore.updateChart(combinedData, annotations);
 
     } else if (this.currentChartType === 'chart2') {
-      // Логика для второго типа графика (updateChart2)
       const platform = this.selectedPlatformKey;
       if (!platform) {
         console.warn('No platform data found');
