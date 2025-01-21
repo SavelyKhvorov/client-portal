@@ -154,14 +154,14 @@ export default {
 
     async handleRegistration() {
       this.validateForm();     
-      if (Object.keys(this.errors).length === 0) {
-        alert("Form submitted successfully!");
-        this.$router.push('/dashboard');
-      }
-
-      // if (Object.keys(this.errors).length > 0) {
-      //   return;
+      // if (Object.keys(this.errors).length === 0) {
+      //   alert("Form submitted successfully!");
+      //   this.$router.push('/dashboard');
       // }
+
+      if (Object.keys(this.errors).length > 0) {
+        return;
+      }
 
       try {
         const payload = {
@@ -175,19 +175,16 @@ export default {
           projectDescription: this.projectDescription,
         };
 
-        const response = await axios.post('/api/register', payload);
+        const response = await axios.post('/api/cp/register', payload);
 
-        if (response.status === 201) {
-          alert("Registration successful!");
+        if (response.data.result === 'OK') {
           this.$router.push('/dashboard');
+        } else if (response.data.result === 'error') {
+          this.errors.general = response.data.message || "Something went wrong. Please try again.";
         }
       } catch (error) {
-        if (error.response && error.response.status === 400) {
-          this.errors.general = error.response.data.message || "Invalid registration data";
-        } else {
-          console.error("An error occurred:", error);
-          this.errors.general = "Something went wrong. Please try again later.";
-        }
+        console.error("An error occurred:", error);
+        this.errors.general = "Something went wrong. Please try again later.";
       }
     },
   },

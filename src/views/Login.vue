@@ -80,33 +80,30 @@ export default {
         this.errors.password = 'Password is required';
       }
 
-      if (Object.keys(this.errors).length === 0) {
-        this.$router.push('/dashboard'); 
-      }
+      // if (Object.keys(this.errors).length === 0) {
+      //   this.$router.push('/dashboard'); 
+      // }
 
       if (Object.keys(this.errors).length > 0) {
         return; 
       }
 
       try {
-        const response = await this.$axios.post('/api/login', {
+        const response = await this.$axios.post('/api/cp/login', {
           email: this.email,
           password: this.password,
         });
 
-        if (response.status === 200) {
-          const data = response.data;
+        if (response.data.status === 'OK') {
           const authStore = useAuthStore(); 
-          authStore.setToken(data.token); 
+          authStore.setToken(response.data.token); 
           this.$router.push('/dashboard');
+        } else if (response.data.result === 'error') {
+          this.errors.general = response.data.message || 'Something went wrong. Please try again.';
         }
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          this.errors.general = 'Invalid email or password';
-        } else {
-          console.error('An error occurred:', error);
-          this.errors.general = 'Something went wrong. Please try again later.';
-        }
+        console.error('An error occurred:', error);
+        this.errors.general = 'Something went wrong. Please try again later.';
       }
     },
 

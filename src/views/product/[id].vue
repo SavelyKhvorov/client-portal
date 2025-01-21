@@ -240,7 +240,7 @@ export default {
       } else if (type === 'chart2') {
         const now = new Date();
         const start = new Date(now);
-        start.setMonth(now.getMonth() - 3);
+        start.setMonth(now.getMonth() - 1);
         this.value1 = [start, now];
       }
       this.updateChart();
