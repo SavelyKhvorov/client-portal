@@ -5,12 +5,12 @@ import Registration from '@/views/Registration.vue';
 import TotalAnalytics from '@/views/TotalAnalytics.vue';
 
 const routes = [
-  { path: '/', redirect: '/login' },
-  { path: '/login', name: 'Login', component: Login },
-  { path: '/registration', name: 'Registration', component: Registration },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/total-analytics', name: 'TotalAnalytics', component: TotalAnalytics },
-  { path: '/product/:id', name: 'ProductDetails', component: () => import("@/views/product/[id].vue")},
+  { path: '/cp/', redirect: '/cp/login' },
+  { path: '/cp/login', name: 'Login', component: Login },
+  { path: '/cp/registration', name: 'Registration', component: Registration },
+  { path: '/cp/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/cp/total-analytics', name: 'TotalAnalytics', component: TotalAnalytics },
+  { path: '/cp/product/:id', name: 'ProductDetails', component: () => import("@/views/product/[id].vue")},
 ];
 
 const router = createRouter({

@@ -131,7 +131,7 @@ export default {
   },
   methods: {
     ToDashboard(){
-      this.$router.push('/dashboard');
+      this.$router.push('/cp/dashboard');
     },
     updateChart() {
       const [startDate, endDate] = this.value1.map((date) => new Date(date));

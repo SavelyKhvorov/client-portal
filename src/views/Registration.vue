@@ -22,57 +22,22 @@
             </div>
 
             <div class="form__group">
-              <label class="form__label" for="end-users">Number of end users</label>
-              <select id="end-users" v-model="endUsers" class="form__input" required>
-                <option disabled value="">Select</option>
-                <option><100</option>
-                <option>100-1,000</option>
-                <option>1,000-10,000</option>
-                <option>10,000-50,000</option>
-                <option>>50,000</option>
-              </select>
-            </div>
-
-            <div class="form__group">
-              <label class="form__label" for="platform">Platform</label>
-              <select id="platform" v-model="platform" class="form__input" required>
-                <option disabled value="">Select</option>
-                <option>Web</option>
-                <option>Android</option>
-                <option>iOS</option>
-                <option>Win</option>
-                <option>Mac</option>
-                <option>Linux</option>
-              </select>
-            </div>
-
-            <div class="form__group">
-              <label class="form__label" for="feature">Feature</label>
-              <select id="feature" v-model="feature" class="form__input" required>
-                <option disabled value="">Select</option>
-                <option>Blur/Replace/Remove Background</option>
-                <option>Smart Zoom (Auto framing)</option>
-                <option>Beautification</option>
-                <option>Sharpness</option>
-                <option>Low Light</option>
-                <option>Color correction</option>
-                <option>Lower thirds</option>
-                <option>Layouts</option>
-                <option>Objects (Emoji)</option>
-                <option>Overlays</option>
-              </select>
-            </div>
-
-            <div class="form__group">
               <label class="form__label" for="email">Business Email</label>
               <input id="email" v-model="email" type="email" class="form__input" placeholder="Your Email" required :class="{'input-error': errors.email}"/>
               <span v-if="errors.email" class="form__error">{{ errors.email }}</span>
             </div>
 
             <div class="form__group">
-              <label class="form__label" for="company">Company or Website</label>
-              <input id="company" v-model="company" type="text" class="form__input" placeholder="Your Company or Website" required />
+              <label class="form__label" for="company">Company</label>
+              <input id="company" v-model="company" type="text" class="form__input" placeholder="Your Company's Name" required :class="{'input-error': errors.company}"/>
+              <span v-if="errors.company" class="form__error">{{ errors.company }}</span>
             </div>
+
+            <div class="form__group">
+              <label class="form__label" for="website">Website</label>
+              <input id="website" v-model="website" type="text" class="form__input" placeholder="Your Company's Website" />
+            </div>
+
 
             <div class="form__group">
               <label class="form__label" for="password">Password</label>
@@ -87,12 +52,7 @@
             </div>
           </div>
 
-          <div class="form__group--area">
-            <label class="form__label" for="project">Please describe your project</label>
-            <textarea id="project" v-model="projectDescription" class="form__input textarea" placeholder="Project Description" rows="4"></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Create account</button>
+          <button type="submit" class="btn btn-regist">Create account</button>
         </form>
       </div>
     </div>
@@ -114,14 +74,11 @@ export default {
   data() {
     return {
       name: '',
-      endUsers: '',
-      platform: '',
-      feature: '',
       email: '',
       company: '',
+      website: '',
       password: '',
       passwordConfirm: '',
-      projectDescription: '',
       errors: {},
     };
   },
@@ -131,6 +88,9 @@ export default {
 
       if (!this.name) {
         this.errors.name = "Name is required";
+      }
+      if (!this.company) {
+        this.errors.company = "Company's name is required";
       }
       if (!this.email) {
         this.errors.email = "Email is required";
@@ -166,19 +126,18 @@ export default {
       try {
         const payload = {
           name: this.name,
-          endUsers: this.endUsers,
-          platform: this.platform,
-          feature: this.feature,
           email: this.email,
           company: this.company,
-          password: this.password,
-          projectDescription: this.projectDescription,
+          website: this.website,
+          password: this.password
         };
 
-        const response = await axios.post('/api/cp/register', payload);
+        const response = await this.$axios.post('/api/cp/register', payload);
 
         if (response.data.result === 'OK') {
-          this.$router.push('/dashboard');
+          const authStore = useAuthStore();
+          authStore.setAuthStatus('OK');
+          this.$router.push('/cp/dashboard');
         } else if (response.data.result === 'error') {
           this.errors.general = response.data.message || "Something went wrong. Please try again.";
         }
@@ -198,7 +157,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 140vh;
+    min-height: 100vh;
   }
 
   &__card {
@@ -210,15 +169,6 @@ export default {
     max-width: 800px;
     width: 100%;
     text-align: center;
-  }
-
-  &__svg-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; 
   }
 
   &__title {
@@ -282,6 +232,18 @@ export default {
   }
 }
 
+.btn-regist {
+  margin-top: 30px;
+  background-color: @blue2;
+  color: white;
+  border: 2px solid @blue2;
+  &:hover{
+    background-color: @blue2;
+    color: @white;
+    border: 2px solid @blue2;
+  }
+}
+
 .btn {
   width: 100%;
   padding: 12px;
@@ -313,6 +275,7 @@ export default {
     border: 2px solid @blue2;
   }
 }
+
 
 .SvgBlueStain {
   position: absolute;

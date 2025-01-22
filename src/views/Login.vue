@@ -95,9 +95,9 @@ export default {
         });
 
         if (response.data.status === 'OK') {
-          const authStore = useAuthStore(); 
-          authStore.setToken(response.data.token); 
-          this.$router.push('/dashboard');
+          const authStore = useAuthStore();
+          authStore.setAuthStatus('OK');
+          this.$router.push('/cp/dashboard');
         } else if (response.data.result === 'error') {
           this.errors.general = response.data.message || 'Something went wrong. Please try again.';
         }
@@ -108,14 +108,27 @@ export default {
     },
 
     redirectToRegister() {
-      this.$router.push('/registration');
+      this.$router.push('/cp/registration');
     },
 
     isValidEmail(email) {
       const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       return re.test(email);
     },
+
+  //   async testAxios() {
+  //     try {
+  //       const response = await this.$axios.get('https://jsonplaceholder.typicode.com/posts/1');
+  //       console.log('Axios is working! Response:', response.data);
+  //     } catch (error) {
+  //       console.error('Axios test failed:', error);
+  //     }
+  //   }
   },
+  mounted() {
+    this.testAxios();
+  }
+
 };
 </script>
 

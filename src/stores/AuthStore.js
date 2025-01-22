@@ -2,29 +2,29 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null, 
+    authStatus: null,
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token, 
+    isAuthenticated: (state) => state.authStatus === 'OK', 
   },
 
   actions: {
-    setToken(token) {
-      this.token = token;
-      localStorage.setItem('token', token); 
+    setAuthStatus(status) {
+      this.authStatus = status;
+      localStorage.setItem('authStatus', status);  
     },
 
-    loadToken() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.token = token;
+    loadAuthStatus() {
+      const status = localStorage.getItem('authStatus');
+      if (status) {
+        this.authStatus = status;
       }
     },
 
-    clearToken() {
-      this.token = null;
-      localStorage.removeItem('token'); 
+    clearAuthStatus() {
+      this.authStatus = null;
+      localStorage.removeItem('authStatus'); 
     },
   },
 });

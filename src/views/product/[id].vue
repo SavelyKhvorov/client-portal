@@ -193,7 +193,7 @@ export default {
       }
     },
     ToDashboard() {
-      this.$router.push('/dashboard');
+      this.$router.push('/cp/dashboard');
     },
     calculateEndDate() {
       const platformKey = this.selectedPlatformKey;

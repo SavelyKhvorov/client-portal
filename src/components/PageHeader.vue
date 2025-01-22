@@ -2,7 +2,7 @@
   <header class="page-header">
     <div class="page-header__container">
 
-      <RouterLink to="/" class="page-header__logo-wrap">
+      <RouterLink to="/cp/" class="page-header__logo-wrap">
         <SvgLogo />
       </RouterLink>
 
@@ -20,7 +20,8 @@
 
       
       <div class="page-header__actions">
-        <button @click="SignIn" class="page-header__login-button">Sign in</button>
+        <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
+        </button>
         <button class="page-header__trial-button">GET FREE TRIAL</button>
       </div>
     </div>
@@ -29,6 +30,8 @@
 
 <script>
 import SvgLogo from '@/components/icons/SvgLogo.vue';
+import { useAuthStore } from '@/stores/AuthStore.js';
+
 
 export default {
   components: {
@@ -37,18 +40,37 @@ export default {
   data() {
     return {
       tabs: [
-        { title: 'Products', path: '/products'},
-        { title: 'Features', path: '/features'},
-        { title: 'Solutions', path: '/solutions'},
-        { title: 'Blog', path: '/blog'},
-        { title: 'Contact Us', path: '/contact'},
+        { title: 'Products', path: '/cp/products'},
+        { title: 'Features', path: '/cp/features'},
+        { title: 'Solutions', path: '/cp/solutions'},
+        { title: 'Blog', path: '/cp/blog'},
+        { title: 'Contact Us', path: '/cp/contact'},
       ],
     };
   },
   methods: {
-    SignIn(){
-      this.$router.push('/login');
+    handleAuth() {
+    const authStore = useAuthStore();
+
+    if (this.isAuthenticated) {
+      console.log("User is authenticated, signing out...");
+      authStore.clearAuthStatus(); 
+      this.$router.push('/cp/login');  
+    } else {
+      console.log("User is not authenticated, signing in...");
+      this.$router.push('/cp/login');
     }
+  }
+  },
+  computed: {
+    isAuthenticated() {
+      const authStore = useAuthStore();
+      return authStore.isAuthenticated;
+    }
+  },
+    mounted() {
+    const authStore = useAuthStore();
+    authStore.loadAuthStatus();
   }
 };
 </script>

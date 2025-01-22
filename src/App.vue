@@ -14,10 +14,10 @@ export default {
   components: {
     PageHeader,
   },
-  setup() {
+  created(){
     const authStore = useAuthStore();
-    authStore.loadToken(); 
-  },
+    authStore.loadAuthStatus();
+  }
 }
 </script>
 
