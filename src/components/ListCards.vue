@@ -42,7 +42,9 @@ export default {
     async fetchProducts() {
       try {
         const response = await this.$axios.get("/api/cp/products");
-        this.productsList = response.data; 
+        if (response.data.result === "OK") {
+          this.productsList = response.data.response; 
+        }
       } catch (error) {
         console.error("Error loading subscriptions:", error);
       }

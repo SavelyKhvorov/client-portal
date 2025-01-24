@@ -10,6 +10,10 @@
         <h1 class="login__title">Welcome back!</h1>
         <p class="login__subtitle">Please sign in to continue</p>
 
+        <div v-if="errors.general" class="form__general-error">
+          {{ errors.general }}
+        </div>
+
 
         <form class="login__form" @submit.prevent="handleLogin" novalidate>
           <div class="form__group">
@@ -80,10 +84,6 @@ export default {
         this.errors.password = 'Password is required';
       }
 
-      // if (Object.keys(this.errors).length === 0) {
-      //   this.$router.push('/dashboard'); 
-      // }
-
       if (Object.keys(this.errors).length > 0) {
         return; 
       }
@@ -116,19 +116,7 @@ export default {
       return re.test(email);
     },
 
-  //   async testAxios() {
-  //     try {
-  //       const response = await this.$axios.get('https://jsonplaceholder.typicode.com/posts/1');
-  //       console.log('Axios is working! Response:', response.data);
-  //     } catch (error) {
-  //       console.error('Axios test failed:', error);
-  //     }
-  //   }
   },
-  mounted() {
-    this.testAxios();
-  }
-
 };
 </script>
 
@@ -249,6 +237,16 @@ export default {
     background-color: @blue2;
     color: @white;
   }
+}
+
+.form__general-error {
+  color: #d9534f; 
+  background-color: #f8d7da;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  text-align: center;
 }
 
 </style>
