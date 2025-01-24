@@ -1,0 +1,75 @@
+[
+  {
+    "id":1,
+    "name":"TomskSoft",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"
+      },
+    "limit":1000,
+    "current":610,
+    "flag":"green","customerId":"8acdc08bbc7a08b90e481e9c6a7d6450b479356c","sdk":"video",
+    "platform":"web",
+    "status":"trial"
+  },
+  {
+    "id":23,
+    "name":"Webcam Effects Extension",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"
+      },
+    "limit":1000,
+    "current":925,
+    "flag":"green",
+    "customerId":"cdce12c3fb71b78c0498781a55f22e6971446728",
+    "sdk":"video",
+    "platform":"web",
+    "status":"trial"
+  },
+  {
+    "id":76,
+    "name":"Halloween Extension",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"
+    },
+    "limit":1000,
+    "current":823,
+    "flag":"green",
+    "customerId":"e71f5e83be4d9a6d5f3a65a1745d8175ca1dbde9",
+    "sdk":"video",
+    "platform":"web",
+    "status":"trial"
+  },
+  {
+    "id":90,
+    "name":"Beauty Filter Extension",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"
+    },
+    "limit":1000,
+    "current":385,
+    "flag":"green",
+    "customerId":"4b8d99c8cfd52603f76c387cde0d3de3b0dd7da1",
+    "sdk":"video",
+    "platform":"web",
+    "status":"trial"
+  },
+  {
+    "id":99,
+    "name":"Background Noise Remover",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"
+    },
+    "limit":1000,
+    "current":209,
+    "flag":"green",
+    "customerId":"ac9445cb76d793fe92580ca06a99e33e29212575",
+    "sdk":"video",
+    "platform":"web",
+    "status":"trial"
+  }
+]

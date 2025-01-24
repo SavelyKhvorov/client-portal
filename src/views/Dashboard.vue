@@ -3,7 +3,7 @@
     <div class="dashboard__container">
       <div class="dashboard__header">
         <h1 class="dashboard__title">Subscribes</h1>
-        <router-link to="/total-analytics" class="dashboard__link">Go to Total Analytics</router-link>
+        <router-link to="/cp/total-analytics" class="dashboard__link">Go to Total Analytics</router-link>
       </div>
       <ListCards />
     </div>

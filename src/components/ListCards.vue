@@ -9,13 +9,13 @@
             :key="item.id"
             :id="item.id"
             :sdk="item.sdk"
-            :platform="Object.keys(item.platform)[0]"
-            :name="item.platform[Object.keys(item.platform)[0]].name"
-            :period="item.platform[Object.keys(item.platform)[0]].period"
-            :limit="item.platform[Object.keys(item.platform)[0]].limit"
-            :current="item.platform[Object.keys(item.platform)[0]].current"
-            :flag="item.platform[Object.keys(item.platform)[0]].flag"
-            :customerId="item.platform[Object.keys(item.platform)[0]].customerId"
+            :platform="item.platform"
+            :name="item.name"
+            :period="item.period"
+            :limit="item.limit"
+            :current="item.current"
+            :flag="item.flag"
+            :customerId="item.customerId"
             class="list-cards__card"
           />
           </TransitionGroup>
@@ -27,7 +27,7 @@
 
 <script>
 import Card from "@/components/Card.vue";
-import productsList from "@/json/products.json";
+// import productsList from "@/json/newproducts.json";
 
 export default {
   components: {
@@ -35,8 +35,21 @@ export default {
   },
   data() {
     return {
-      productsList,
+      productsList: [],
     };
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        const response = await this.$axios.get("/api/cp/products");
+        this.productsList = response.data; 
+      } catch (error) {
+        console.error("Error loading subscriptions:", error);
+      }
+    },
+  },
+  created() {
+    this.fetchProducts(); 
   },
 };
 </script>

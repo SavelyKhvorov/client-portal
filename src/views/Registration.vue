@@ -63,6 +63,7 @@
 import SvgBlueStain from '@/components/icons/SvgBlueStain.vue';
 import SvgOrangeWaves from '@/components/icons/SvgOrangeWaves.vue';
 import SvgYellowWaves from '@/components/icons/SvgYellowWaves.vue';
+import { useAuthStore } from '@/stores/AuthStore.js';
 
 export default {
   name: 'Registration',

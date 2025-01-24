@@ -6,6 +6,9 @@ import VueRouter from 'unplugin-vue-router/vite'
 
 
 export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 900,
+  },
   css: {
     preprocessorOptions: {
       less: {

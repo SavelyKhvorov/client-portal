@@ -94,7 +94,7 @@ export default {
           password: this.password,
         });
 
-        if (response.data.status === 'OK') {
+        if (response.data.result === 'OK') {
           const authStore = useAuthStore();
           authStore.setAuthStatus('OK');
           this.$router.push('/cp/dashboard');
