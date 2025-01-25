@@ -5,7 +5,7 @@
       <div class="prod__header">
         <div class="prod__title-container">
           <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
-          <p class="prod__platform">Platform: {{ productData?.platform }} </p>
+          <p class="prod__platform">Platform: {{ selectedPlatformKey }} </p>
         </div>
         <button type="button" class="btn back-button" @click="ToDashboard">Back</button>
       </div>
@@ -18,12 +18,12 @@
         </div>
 
         <div class="prod__card prod__card--highlight">
-          <h2>{{ productData?.name }}</h2>
+          <h2>{{ currentPlatformName }}</h2>
           <p>
-            {{ getSubscriptionDescription(productData?.name) }}
+            {{ getSubscriptionDescription(currentPlatformName) }}
           </p>
           <p><strong>{{ subscriptionPeriod }}</strong></p>
-          <p><strong>{{ productData?.current }} / {{ productData?.limit }}</strong></p>
+          <p><strong>{{ currentUsage }} / {{ usageLimit }}</strong></p>
         </div>
       </div>
 
@@ -62,6 +62,7 @@ import { useAnalyticsStore } from '@/stores/AnalyticsStore.js';
 import VueDatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import ApexCharts from 'vue3-apexcharts';
+import jsonData from '@/json/data.json';
 import descriptionData from '@/json/description.json';
 
 export default {
@@ -72,6 +73,7 @@ export default {
     return {
       AnalyticsStore,
       chartStore,
+      jsonData,
       descriptionData,
     };
   },
@@ -116,13 +118,13 @@ export default {
         {
           text: 'Subs month',
           onClick: () => {
-            const platformKey = this.productData?.platform; 
+            const platformKey = this.selectedPlatformKey; 
             if (!platformKey) {
               console.error('No platform selected.');
               return;
             }
 
-            const platformData = this.productData;
+            const platformData = this.productData?.platform[platformKey];
             if (!platformData || !platformData.period || !platformData.period.start) {
               console.error('No valid subscription period found for platform:', platformKey);
               return;
@@ -139,13 +141,13 @@ export default {
         {
           text: 'Subs year',
           onClick: () => {
-            const platformKey = this.productData?.platform; 
+            const platformKey = this.selectedPlatformKey; 
             if (!platformKey) {
               console.error('No platform selected.');
               return;
             }
 
-            const platformData = this.productData;
+            const platformData = this.productData?.platform[platformKey];
             if (!platformData || !platformData.period || !platformData.period.start) {
               console.error('No valid subscription period found for platform:', platformKey);
               return;
@@ -163,41 +165,49 @@ export default {
     };
   },
   methods: {
-    async fetchProductData() {
-      const subscription_id = Number(this.$route.params.id);
-      try {
-        const response = await this.$axios.get(`/api/cp/stats/${subscription_id}`);
-        if (response.data.result === 'OK') {
-          this.productData = response.data.response;
-        } else {
-          console.error('Failed to fetch product data:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching product data:', error);
-      }
-    },
     getSdkDescription(sdkName) {
-      const sdk = this.descriptionData.find((item) => item.sdk === sdkName);
-      return sdk ? sdk.description : "Description not available";
+      const sdk = this.descriptionData.find(item => item.sdk === sdkName);
+      return sdk ? sdk.description : 'Description not available';
     },
-    getSubscriptionDescription(name) {
-      const subscription = this.descriptionData.find((item) => item.name === name);
-      return subscription ? subscription.description : "Description not available";
+    getSubscriptionDescription(currentPlatformName) {
+      console.log('Getting subscription description for platform:', currentPlatformName); 
+      
+      const subscriptionDescription = this.descriptionData.find(item => item.name === currentPlatformName);
+
+      return subscriptionDescription ? subscriptionDescription.description : 'Description not available';
+    },
+    fetchProductData() {
+      const id = Number(this.$route.params.id); 
+      console.log('Fetching product data for id:', id);
+      this.productData = jsonData.find((item) => item.id === id);
+
+      if (this.productData) {
+        console.log('Product data found:', this.productData);
+        this.selectedSdks = [this.productData.sdk];
+
+        const platformKeys = Object.keys(this.productData.platform);
+        this.selectedPlatforms = platformKeys;
+
+      } else {
+        console.error('Product data not found for id:', id);
+      }
     },
     ToDashboard() {
       this.$router.push('/cp/dashboard');
     },
     calculateEndDate() {
+      const platformKey = this.selectedPlatformKey;
 
-      if (!this.productData || !this.productData.platform) {
+      if (!platformKey || !this.productData || !this.productData.platform[platformKey]) {
         console.error("Platform data is not available.");
         return "Unknown";
       }
 
-      const remainingLimit = this.productData?.limit - this.productData?.current;
+      const platformData = this.productData.platform[platformKey];
+      const remainingLimit = platformData.limit - platformData.current;
 
       const dailyUsage = Math.round(
-        this.productData.data.reduce((sum, item) => sum + item.value, 0) / this.productData.data.length
+        platformData.data.reduce((sum, item) => sum + item.value, 0) / platformData.data.length
       );
 
       if (dailyUsage === 0) {
@@ -206,7 +216,7 @@ export default {
 
       const daysToEnd = Math.ceil(remainingLimit / dailyUsage);
 
-      const lastDate = new Date(this.productData.data[this.productData.data.length - 1].date);
+      const lastDate = new Date(platformData.data[platformData.data.length - 1].date);
       const predictedEndDate = new Date(lastDate);
       predictedEndDate.setDate(predictedEndDate.getDate() + daysToEnd);
 
@@ -218,7 +228,7 @@ export default {
         const predictedEndDate = this.calculateEndDate();
 
         if (predictedEndDate !== "Unknown") {
-          const subscriptionStartDate = new Date(this.productData.period.start);
+          const subscriptionStartDate = new Date(this.productData.platform[this.selectedPlatformKey].period.start);
           const endDate = new Date(predictedEndDate);
           endDate.setDate(endDate.getDate() + 10); 
 
@@ -237,23 +247,23 @@ export default {
     },
 
     updateChart() {
-      if (!this.productData) {
-        console.warn('No product data available. Skipping chart update.');
-        return;
-      }
+    if (!this.productData) {
+      console.warn('No product data available. Skipping chart update.');
+      return;
+    }
 
-      const [startDate, endDate] = this.value1.map((date) => new Date(date));
-      const combinedData = [];
-      let annotations = [];
+    const [startDate, endDate] = this.value1.map((date) => new Date(date));
+    const combinedData = [];
+    let annotations = [];
 
-      if (this.currentChartType === 'chart1') {
-        let totalLimit = 0;
-        let totalCurrent = 0;
+    if (this.currentChartType === 'chart1') {
+      let totalLimit = 0;
+      let totalCurrent = 0;
 
-        const platformData = this.productData;
-
+      this.selectedPlatforms.forEach((platform) => {
+        const platformData = this.productData.platform[platform];
         if (!platformData) {
-          console.warn('No platform data found');
+          console.warn(`No platform data found for platform: ${platform}`);
           return;
         }
 
@@ -300,7 +310,7 @@ export default {
         }
 
         combinedData.push({
-          name: `${this.productData.sdk} - ${this.productData.platform}`,
+          name: `${this.productData.sdk} - ${platform}`,
           data: filledData,
         });
 
@@ -318,63 +328,84 @@ export default {
             },
           });
         }
+      });
 
-        this.chartStore.updateChart(combinedData, annotations);
+      this.chartStore.updateChart(combinedData, annotations);
 
-      } else if (this.currentChartType === 'chart2') {
-        const platform = this.productData.platform;
-        if (!platform) {
-          console.warn('No platform data found');
-          return;
-        }
-
-        const platformData = this.productData;
-        if (!platformData) {
-          console.warn(`No platform data found for platform: ${platform}`);
-          return;
-        }
-
-        const dataByDate = platformData.data.reduce((acc, item) => {
-          const dateStr = new Date(item.date).toISOString().split('T')[0];
-          acc[dateStr] = item.value;
-          return acc;
-        }, {});
-
-        const filledData = [];
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-          const dateStr = d.toISOString().split('T')[0];
-          filledData.push({
-            x: new Date(dateStr).getTime(),
-            y: dataByDate[dateStr] || 0,
-          });
-        }
-
-        const chartData = [{
-          name: `${this.productData.sdk} - ${platformData.platform}`,
-          data: filledData,
-        }];
-
-        this.chartStore.updateChart(chartData, []);
+    } else if (this.currentChartType === 'chart2') {
+      const platform = this.selectedPlatformKey;
+      if (!platform) {
+        console.warn('No platform data found');
+        return;
       }
+
+      const platformData = this.productData.platform[platform];
+      if (!platformData) {
+        console.warn(`No platform data found for platform: ${platform}`);
+        return;
+      }
+
+      const dataByDate = platformData.data.reduce((acc, item) => {
+        const dateStr = new Date(item.date).toISOString().split('T')[0];
+        acc[dateStr] = item.value;
+        return acc;
+      }, {});
+
+      const filledData = [];
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        filledData.push({
+          x: new Date(dateStr).getTime(),
+          y: dataByDate[dateStr] || 0,
+        });
+      }
+
+      const chartData = [{
+        name: `${this.productData.sdk} - ${platform}`,
+        data: filledData,
+      }];
+
+      this.chartStore.updateChart(chartData, []);
     }
+  },
+
   },
 
   computed: {
+    currentPlatformName() {
+      const platformKey = this.selectedPlatforms[0];
+      return this.productData?.platform[platformKey]?.name || null;
+    },
+    selectedPlatformKey() {
+      return this.selectedPlatforms.length > 0 ? this.selectedPlatforms[0] : null;
+    },
     subscriptionPeriod() {
-      if (this.productData?.period) {
-        const { start, end } = this.productData.period;
-        return `${start.split(" ")[0]} ~ ${end.split(" ")[0]}`;
+      const platformKey = this.selectedPlatforms[0];
+      const period = this.productData?.platform[platformKey]?.period;
+      if (period) {
+        const startDate = period.start;
+        const endDate = period.end;
+        return `${startDate} ~ ${endDate}`;
       }
-      return "No subscription data";
-    }
+      return 'No subscription data';
+    },
+    currentUsage() {
+      const platformKey = this.selectedPlatforms[0];
+      return this.productData?.platform[platformKey]?.current || 0;
+    },
+    usageLimit() {
+      const platformKey = this.selectedPlatforms[0];
+      return this.productData?.platform[platformKey]?.limit || 0;
+    },
+  
   },
-
-  async mounted() {
-    await this.fetchProductData(); 
+  mounted() {
+    this.fetchProductData(); 
     const predictedEndDate = this.calculateEndDate();
+    console.log("Predicted End Date:", predictedEndDate);
 
     if (predictedEndDate !== "Unknown") {
-      const subscriptionStartDate = new Date(this.productData.period.start);
+      const subscriptionStartDate = new Date(this.productData.platform[this.selectedPlatformKey].period.start);
       const endDate = new Date(predictedEndDate);
       endDate.setDate(endDate.getDate() + 10); 
 
@@ -383,9 +414,20 @@ export default {
     } else {
       console.error("Unable to calculate the predicted end date.");
     }
-
   },
   watch: {
+    selectedPlatforms: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
+    selectedSdks: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
     value1: {
       handler() {
         this.updateChart();
@@ -430,6 +472,8 @@ export default {
     color: #1E2362;
     margin: 0;
     flex-grow: 1; 
+    // text-align: center; 
+    // margin-left: 100px;
   }
 
   &__platform {

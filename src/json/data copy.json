@@ -1,0 +1,35 @@
+{
+  "result":"OK",
+  "response":{
+    "id":23,
+    "name":"Webcam Effects Extension",
+    "period":{
+      "start":"2024-06-01 00:00:00",
+      "end":"2025-06-01 00:00:00"},
+    "limit":1000,
+    "current":87,
+    "flag":"green",
+    "customerId":"cdce12c3fb71b78c0498781a55f22e6971446728",
+    "sdk":"video",
+    "platform":"web",
+    "status":"trial",
+    "data":[
+      {"date":"2025-01-06","value":50},
+      {"date":"2025-01-07","value":60},
+      {"date":"2025-01-08","value":34},
+      {"date":"2025-01-09","value":122},
+      {"date":"2025-01-10","value":42},
+      {"date":"2025-01-11","value":12},
+      {"date":"2025-01-12","value":14},
+      {"date":"2025-01-13","value":73},
+      {"date":"2025-01-14","value":23},
+      {"date":"2025-01-15","value":97},
+      {"date":"2025-01-16","value":36},
+      {"date":"2025-01-17","value":72},
+      {"date":"2025-01-18","value":13},
+      {"date":"2025-01-19","value":61},
+      {"date":"2025-01-20","value":77},
+      {"date":"2025-01-21","value":33}
+    ]
+  }
+}
