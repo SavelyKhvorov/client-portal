@@ -20,8 +20,8 @@
 
       
       <div class="page-header__actions">
-        <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
-        </button>
+        <!-- <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
+        </button> -->
         <button class="page-header__trial-button">GET FREE TRIAL</button>
       </div>
     </div>

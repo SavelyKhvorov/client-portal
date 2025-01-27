@@ -57,15 +57,15 @@ import { useAnalyticsStore } from '@/stores/AnalyticsStore.js';
 import VueDatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import ApexCharts from 'vue3-apexcharts';
-import jsonData from '@/json/data.json';
+// import jsonData from '@/json/data.json';
 
 export default {
   components: { VueDatePicker, apexchart: ApexCharts },
   setup() {
     const AnalyticsStore = useAnalyticsStore();
+    const jsonData = {};
     return {
       AnalyticsStore,
-      jsonData,
     };
   },
   data() {
