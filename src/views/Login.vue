@@ -44,7 +44,7 @@
             <a href="#" class="form__forgot-password">Forgot password?</a>
           </div>
 
-          <button type="submit" class="btn btn-primary">Sign in</button>
+          <button type="submit" class="btn btn-primary" @click="handleLogin">Sign in</button>
           <button type="button" class="btn btn-secondary" @click="redirectToRegister">
             Don’t have an account?
           </button>

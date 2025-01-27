@@ -31,9 +31,15 @@ export default {
     } else {
       console.log("User is not authenticated, signing in...");
       this.$router.push('/cp/login');
+      }
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      const authStore = useAuthStore();
+      return authStore.isAuthenticated;
     }
   }
-  },
 };
 </script>
 

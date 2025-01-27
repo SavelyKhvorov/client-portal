@@ -3,21 +3,9 @@
     <div class="prod__container">
 
       <div class="prod__header">
-        <div class="prod__title-container">
+        <div class="prod__card prod__card--highlight">
           <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
           <p class="prod__platform">Platform: {{ productData?.platform }} </p>
-        </div>
-        <button type="button" class="btn back-button" @click="ToDashboard">Back</button>
-      </div>
-
-      <div class="prod__cards">
-        <div class="prod__card">
-          <p class="prod__text">
-            {{ getSdkDescription(productData?.sdk) }}
-          </p>
-        </div>
-
-        <div class="prod__card prod__card--highlight">
           <h2>{{ productData?.name }}</h2>
           <p>
             {{ getSubscriptionDescription(productData?.name) }}
@@ -25,7 +13,27 @@
           <p><strong>{{ subscriptionPeriod }}</strong></p>
           <p><strong>{{ productData?.current }} / {{ productData?.limit }}</strong></p>
         </div>
+        <button type="button" class="btn back-button" @click="ToDashboard">Back</button>
       </div>
+
+      <!-- <div class="prod__cards">
+        <div class="prod__card">
+          <p class="prod__text">
+            {{ getSdkDescription(productData?.sdk) }}
+          </p>
+        </div>
+
+        <div class="prod__card prod__card--highlight">
+          <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
+          <p class="prod__platform">Platform: {{ productData?.platform }} </p>
+          <h2>{{ productData?.name }}</h2>
+          <p>
+            {{ getSubscriptionDescription(productData?.name) }}
+          </p>
+          <p><strong>{{ subscriptionPeriod }}</strong></p>
+          <p><strong>{{ productData?.current }} / {{ productData?.limit }}</strong></p>
+        </div>
+      </div> -->
 
       <div class="prod__controls">
         <vue-date-picker
@@ -39,8 +47,8 @@
           class="prod__calendar"
         />
         <div class="prod__analytics-buttons">
-          <button class="btn chart-button" @click="switchChart('chart1')">Chart 1</button>
-          <button class="btn chart-button" @click="switchChart('chart2')">Chart 2</button>
+          <!-- <button class="btn chart-button" @click="switchChart('chart1')">Chart 1</button> -->
+          <button class="btn chart-button" @click="switchChart('chart2')">Daily</button>
         </div>
       </div>
 
@@ -49,7 +57,7 @@
           type="line"
           :options="chartStore.chartOptions"
           :series="chartStore.chartSeries"
-          height="300"
+          height="400"
         />
       </div>
     </div>
@@ -81,7 +89,7 @@ export default {
       selectedPlatforms: [],
       selectedSdks: [],
       value1: [],
-      currentChartType: 'chart1',
+      currentChartType: 'chart2',
       shortcuts: [
       {
           text: 'Month',
@@ -176,10 +184,10 @@ export default {
         console.error('Error fetching product data:', error);
       }
     },
-    getSdkDescription(sdkName) {
-      const sdk = this.descriptionData.find((item) => item.sdk === sdkName);
-      return sdk ? sdk.description : "Description not available";
-    },
+    // getSdkDescription(sdkName) {
+    //   const sdk = this.descriptionData.find((item) => item.sdk === sdkName);
+    //   return sdk ? sdk.description : "Description not available";
+    // },
     getSubscriptionDescription(name) {
       const subscription = this.descriptionData.find((item) => item.name === name);
       return subscription ? subscription.description : "Description not available";
@@ -188,7 +196,6 @@ export default {
       this.$router.push('/cp/dashboard');
     },
     calculateEndDate() {
-
       if (!this.productData || !this.productData.platform) {
         console.error("Platform data is not available.");
         return "Unknown";
@@ -219,8 +226,8 @@ export default {
 
         if (predictedEndDate !== "Unknown") {
           const subscriptionStartDate = new Date(this.productData.period.start);
-          const endDate = new Date(predictedEndDate);
-          endDate.setDate(endDate.getDate() + 10); 
+          const endDate = new Date(this.productData.period.end);
+          // endDate.setDate(endDate.getDate() + 10); 
 
           this.value1 = [subscriptionStartDate, endDate];
           this.updateChart(); 
@@ -228,9 +235,8 @@ export default {
           console.error("Unable to calculate the predicted end date.");
         }
       } else if (type === 'chart2') {
-        const now = new Date();
-        const start = new Date(now);
-        start.setMonth(now.getMonth() - 1);
+        const now = new Date(this.productData.period.end);
+        const start = new Date(this.productData.period.start);
         this.value1 = [start, now];
       }
       this.updateChart();
@@ -371,18 +377,24 @@ export default {
 
   async mounted() {
     await this.fetchProductData(); 
-    const predictedEndDate = this.calculateEndDate();
 
-    if (predictedEndDate !== "Unknown") {
-      const subscriptionStartDate = new Date(this.productData.period.start);
-      const endDate = new Date(predictedEndDate);
-      endDate.setDate(endDate.getDate() + 10); 
+    const subscriptionStartDate = new Date(this.productData.period.start);
+    const endDate = new Date(this.productData.period.end);
+    this.value1 = [subscriptionStartDate, endDate];
+    this.updateChart(); 
 
-      this.value1 = [subscriptionStartDate, endDate];
-      this.updateChart(); 
-    } else {
-      console.error("Unable to calculate the predicted end date.");
-    }
+    // const predictedEndDate = this.calculateEndDate();
+
+    // if (predictedEndDate !== "Unknown") {
+    //   const subscriptionStartDate = new Date(this.productData.period.start);
+    //   const endDate = new Date(predictedEndDate);
+    //   endDate.setDate(endDate.getDate() + 10); 
+
+    //   this.value1 = [subscriptionStartDate, endDate];
+    //   this.updateChart(); 
+    // } else {
+    //   console.error("Unable to calculate the predicted end date.");
+    // }
 
   },
   watch: {
@@ -494,7 +506,6 @@ export default {
 
   &__chart-container {
     width: 100%;
-    max-width: 1260px;
     align-self: center;
     margin-top: 20px;
     background-color: @white;
