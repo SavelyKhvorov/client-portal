@@ -182,7 +182,7 @@ export default {
     async fetchProductData() {
       const subscription_id = Number(this.$route.params.id);
       try {
-        const response = await this.$axios.get(`http://192.168.0.133:5000/api/cp/stats/${subscription_id}`);
+        const response = await this.$axios.get(`/api/cp/stats/${subscription_id}`);
         if (response.data.result === 'OK') {
           this.productData = response.data.response;
         } else {

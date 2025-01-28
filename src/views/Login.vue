@@ -89,7 +89,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post('http://192.168.0.133:5000/api/cp/login', {
+        const response = await this.$axios.post('/api/cp/login', {
           email: this.email,
           password: this.password,
         });
