@@ -2,10 +2,9 @@
   <div class="dashboard">
     <div class="dashboard__container">
       <div class="dashboard__header">
-        <h1 class="dashboard__title">Subscribes</h1>
+        <h1 class="dashboard__title">Products</h1>
         <!-- <router-link to="/cp/total-analytics" class="dashboard__link">Go to Total Analytics</router-link> -->
-        <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
-        </button>
+        <button @click="handleAuth" class="page-header__login-button">Logout</button>
       </div>
       <ListCards />
     </div>
@@ -21,18 +20,17 @@ export default {
     ListCards,
   },
   methods: {
-    handleAuth() {
-    const authStore = useAuthStore();
+  handleAuth() {
+      const authStore = useAuthStore();
 
-    if (this.isAuthenticated) {
-      console.log("User is authenticated, signing out...");
-      authStore.clearAuthStatus(); 
-      this.$router.push('/cp/login');  
-    } else {
-      console.log("User is not authenticated, signing in...");
-      this.$router.push('/cp/login');
+      if (authStore.isAuthenticated) {
+        authStore.clearAuthStatus();
+        this.$router.push('/cp/login');
+      } else {
+        console.log("User is not authenticated, signing in...");
+        this.$router.push('/cp/login');
       }
-    }
+    },
   },
   computed: {
     isAuthenticated() {

@@ -54,6 +54,11 @@
 
           <button type="submit" class="btn btn-regist">Create account</button>
         </form>
+
+        <p class="registration__footer">
+          <router-link to="/cp/login" class="registration__link">Already registered? </router-link>
+        </p>
+
       </div>
     </div>
   </div>
@@ -188,6 +193,23 @@ export default {
   &__form {
     text-align: left;
   }
+
+  &__footer {
+    // margin-top: 16px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+  }
+
+  &__link {
+    color: #4a90e2;
+    text-decoration: none;
+    // font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .form {
@@ -255,16 +277,16 @@ export default {
   margin-bottom: 12px;
 }
 
-.btn-primary {
-  background-color: @blue2;
-  color: white;
-  border: 2px solid @blue2;
-  &:hover{
-    background-color: @blue2;
-    color: @white;
-    border: 2px solid @blue2;
-  }
-}
+// .btn-primary {
+//   background-color: @blue2;
+//   color: white;
+//   border: 2px solid @blue2;
+//   &:hover{
+//     background-color: @blue2;
+//     color: @white;
+//     border: 2px solid @blue2;
+//   }
+// }
 
 .btn-secondary {
   background-color: @white;

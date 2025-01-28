@@ -17,9 +17,7 @@ export const useAuthStore = defineStore('auth', {
 
     loadAuthStatus() {
       const status = localStorage.getItem('authStatus');
-      if (status) {
-        this.authStatus = status;
-      }
+      this.authStatus = status === 'OK' ? 'OK' : null;
     },
 
     clearAuthStatus() {

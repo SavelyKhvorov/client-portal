@@ -7,7 +7,7 @@
           <SvgLogo />
         </div>
 
-        <h1 class="login__title">Welcome back!</h1>
+        <h1 class="login__title">Client Portal</h1>
         <p class="login__subtitle">Please sign in to continue</p>
 
         <div v-if="errors.general" class="form__general-error">
@@ -41,13 +41,13 @@
               :class="{'input-error': errors.password}"
             />
             <span v-if="errors.password" class="form__error">{{ errors.password }}</span>
-            <a href="#" class="form__forgot-password">Forgot password?</a>
+            <router-link to="/cp/reset-password" class="form__forgot-password">Forgot password?</router-link>
           </div>
 
           <button type="submit" class="btn btn-primary" @click="handleLogin">Sign in</button>
-          <button type="button" class="btn btn-secondary" @click="redirectToRegister">
+          <!-- <button type="button" class="btn btn-secondary" @click="redirectToRegister">
             Don’t have an account?
-          </button>
+          </button> -->
         </form>
       </div>
     </div>
@@ -89,7 +89,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post('/api/cp/login', {
+        const response = await this.$axios.post('http://192.168.0.133:5000/api/cp/login', {
           email: this.email,
           password: this.password,
         });
@@ -221,7 +221,7 @@ export default {
 }
 
 .btn-primary {
-  background-color: @blue2;
+  background-color: @blue;
   color: @white;
   border: none;
   &:hover{

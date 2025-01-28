@@ -4,14 +4,22 @@
 
       <div class="prod__header">
         <div class="prod__card prod__card--highlight">
-          <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
+          <div class="prod__card-head">
+            <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
+            <p class="prod__status">{{ productData?.status }}</p>
+          </div>
+          
           <p class="prod__platform">Platform: {{ productData?.platform }} </p>
           <h2>{{ productData?.name }}</h2>
           <p>
             {{ getSubscriptionDescription(productData?.name) }}
           </p>
           <p><strong>{{ subscriptionPeriod }}</strong></p>
-          <p><strong>{{ productData?.current }} / {{ productData?.limit }}</strong></p>
+          <p>
+            <strong>
+              {{ productData?.limit === 0 ? 'Unlimited' : `${productData?.current} / ${productData?.limit}` }}
+            </strong>
+          </p>
         </div>
         <button type="button" class="btn back-button" @click="ToDashboard">Back</button>
       </div>
@@ -47,7 +55,7 @@
           class="prod__calendar"
         />
         <div class="prod__analytics-buttons">
-          <!-- <button class="btn chart-button" @click="switchChart('chart1')">Chart 1</button> -->
+          <!-- <button class="btn chart-button--cumulative" @click="switchChart('chart1')">Cumulative</button> -->
           <button class="btn chart-button" @click="switchChart('chart2')">Daily</button>
         </div>
       </div>
@@ -174,7 +182,7 @@ export default {
     async fetchProductData() {
       const subscription_id = Number(this.$route.params.id);
       try {
-        const response = await this.$axios.get(`/api/cp/stats/${subscription_id}`);
+        const response = await this.$axios.get(`http://192.168.0.133:5000/api/cp/stats/${subscription_id}`);
         if (response.data.result === 'OK') {
           this.productData = response.data.response;
         } else {
@@ -450,6 +458,15 @@ export default {
     margin: 0;
   }
 
+  &__status{
+    font-size: 25px;
+    font-weight: bold;
+    color: @blue;
+    text-transform: uppercase;
+    align-self: center;
+    margin: 0;
+  }
+
   &__cards {
     display: flex;
     gap: 20px;
@@ -471,6 +488,11 @@ export default {
   &__card--highlight {
     background-color: #f0f4ff;
     border-color: #a7b3ff;
+  }
+
+  &__card-head{
+    display: flex;
+    width: 100%;
   }
 
   &__controls {
@@ -562,6 +584,25 @@ export default {
 
 .chart-button{
   width: 100px;
+  height: 40px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: normal;
+  color: @blue2;
+  background-color: @white;
+  border: solid 2px @blue2;
+  align-self: flex-start;
+  margin-top: 12px;
+  margin-right: 20px;
+  transition: background-color 0.3s, color 0.3s; 
+  &:hover {
+    color: @white;
+    background-color: @blue2;
+  }
+}
+
+.chart-button--cumulative{
+  width: 140px;
   height: 40px;
   padding: 10px 20px;
   border-radius: 5px;
