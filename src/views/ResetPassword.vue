@@ -3,37 +3,42 @@
     <div class="reset-password__container">
       <div class="reset-password__card">
 
-        <h1 class="reset-password__title">Forgot Password</h1>
-        <p class="reset-password__subtitle">
-          Enter your email below and we’ll send you instructions to reset your password.
-        </p>
-
-        <div v-if="successMessage" class="alert alert-success">
-          {{ successMessage }}
-        </div>
+        <h1 class="reset-password__title">Reset Password</h1>
+        <p class="reset-password__subtitle">Enter your new password below</p>
 
         <div v-if="errors.general" class="form__general-error">
           {{ errors.general }}
         </div>
 
-        <form class="reset-password__form" @submit.prevent="handleSendResetEmail" novalidate>
+        <form class="reset-password__form" @submit.prevent="handleResetPassword" novalidate>
           <div class="form__group">
-            <label class="form__label" for="email">Email</label>
+            <label class="form__label" for="password">New Password</label>
             <input 
-              id="email"
-              v-model="email" 
-              type="email" 
-              placeholder="Email" 
+              id="password"
+              v-model="password" 
+              type="password" 
+              placeholder="New Password" 
               required 
               class="form__input"
-              :class="{'input-error': errors.email}"
+              :class="{'input-error': errors.password}"
             />
-            <span v-if="errors.email" class="form__error">{{ errors.email }}</span>
+            <span v-if="errors.password" class="form__error">{{ errors.password }}</span>
           </div>
-
-          <button type="submit" class="btn btn-primary">
-            Send Reset Instructions
-          </button>
+          <div class="form__group">
+            <label class="form__label" for="confirm-password">Confirm Password</label>
+            <input 
+              id="confirm-password"
+              v-model="confirmPassword" 
+              type="password" 
+              placeholder="Confirm Password" 
+              required 
+              class="form__input"
+              :class="{'input-error': errors.confirmPassword}"
+            />
+            <span v-if="errors.confirmPassword" class="form__error">{{ errors.confirmPassword }}</span>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Reset Password</button>
         </form>
       </div>
     </div>
@@ -41,78 +46,47 @@
 </template>
 
 <script>
-import axios from "@/global/axiosConfig.js";
-
 export default {
   data() {
     return {
-      email: "",
+      password: '',
+      confirmPassword: '',
       errors: {},
-      successMessage: "",
     };
   },
   methods: {
-
-    // async handleSendResetEmail() {
-    //   this.errors = {};
-    //   this.successMessage = "";
-
-    //   if (!this.email) {
-    //     this.errors.email = "Email is required.";
-    //   } else if (!this.isValidEmail(this.email)) {
-    //     this.errors.email = "Please enter a valid email.";
-    //   }
-
-    //   if (Object.keys(this.errors).length > 0) {
-    //     return; 
-    //   }
-
-    //   try {
-    //     const response = await this.$axios.post("http://127.0.0.1:8000/forgot-password", {
-    //       email: this.email,
-    //     });
-
-    //     if (response.data.result === "OK") {
-    //       this.successMessage = response.data.message || "Instructions have been sent to your email.";  
-    //       this.email = "";
-    //       setTimeout(() => {
-    //         this.$router.push("/cp/login"); 
-    //       }, 5000);
-    //     } else {
-    //       this.errors.general =
-    //         response.data.message || "Something went wrong. Please try again.";
-    //     }
-    //   } catch (error) {
-    //     console.error("Error sending reset email:", error);
-    //     this.errors.general =
-    //       "An unexpected error occurred. Please try again later.";
-    //   }
-    // },
-
-    async handleSendResetEmail() {
+    async handleResetPassword() {
       this.errors = {};
-      this.successMessage = "";
-
-      if (!this.isValidEmail(this.email)) {
-        this.errors.email = "Please enter a valid email address.";
+      
+      if (!this.password) {
+        this.errors.password = 'Password is required';
+      } else if (this.password.length < 8) {
+        this.errors.password = 'Password must be at least 8 characters';
+      }
+      
+      if (!this.confirmPassword) {
+        this.errors.confirmPassword = 'Please confirm your password';
+      } else if (this.confirmPassword !== this.password) {
+        this.errors.confirmPassword = 'Passwords do not match';
+      }
+      
+      if (Object.keys(this.errors).length > 0) {
         return;
       }
-
+      
       try {
+        await this.$axios.post('/reset-password', {
+          password: this.password,
+          password_confirmation: this.confirmPassword,
+          token: this.$route.params.token, 
+          email: this.$route.query.email, 
+        });
 
-        const response = await axios.post("/forgot-password", { email: this.email });
+        this.$router.push('/cp/login');
 
-        if (response.data.status) {
-          this.successMessage = "Reset instructions have been sent to your email.";
-          this.email = "";
-        }
       } catch (error) {
-        this.errors.general = error.response?.data?.message || "An error occurred. Please try again.";
+        this.errors.general = error.response?.data?.message || 'Something went wrong. Please try again later.';
       }
-    },
-    isValidEmail(email) {
-      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      return re.test(email);
     },
   },
 };

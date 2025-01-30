@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { handleError } from 'vue';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -24,5 +25,6 @@ export const useAuthStore = defineStore('auth', {
       this.authStatus = null;
       localStorage.removeItem('authStatus'); 
     },
+
   },
 });

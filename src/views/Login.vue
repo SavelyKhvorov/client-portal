@@ -41,7 +41,7 @@
               :class="{'input-error': errors.password}"
             />
             <span v-if="errors.password" class="form__error">{{ errors.password }}</span>
-            <router-link to="/cp/reset-password" class="form__forgot-password">Forgot password?</router-link>
+            <router-link to="/cp/forgot-password" class="form__forgot-password">Forgot password?</router-link>
           </div>
 
           <button type="submit" class="btn btn-primary" @click="handleLogin">Sign in</button>

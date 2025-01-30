@@ -4,12 +4,14 @@ import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Registration from '@/views/Registration.vue';
 import TotalAnalytics from '@/views/TotalAnalytics.vue';
+import ForgotPassword from '@/views/ForgotPassword.vue';
 import ResetPassword from '@/views/ResetPassword.vue';
 
 const routes = [
   { path: '/cp/', redirect: '/cp/login' },
   { path: '/cp/login', name: 'Login', component: Login },
-  { path: '/cp/reset-password', name: 'ResetPassword', component: ResetPassword },
+  { path: '/cp/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
+  { path: '/reset-password/:token', name: 'ResetPassword', component: ResetPassword },
   { path: '/cp/registration', name: 'Registration', component: Registration},
   { path: '/cp/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
   { path: '/cp/total-analytics', name: 'TotalAnalytics', component: TotalAnalytics, meta: { requiresAuth: true }  },
