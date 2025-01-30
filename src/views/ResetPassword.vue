@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import axios from "@/global/axiosConfig.js";
+
 export default {
   data() {
     return {
@@ -50,42 +52,64 @@ export default {
     };
   },
   methods: {
+
+    // async handleSendResetEmail() {
+    //   this.errors = {};
+    //   this.successMessage = "";
+
+    //   if (!this.email) {
+    //     this.errors.email = "Email is required.";
+    //   } else if (!this.isValidEmail(this.email)) {
+    //     this.errors.email = "Please enter a valid email.";
+    //   }
+
+    //   if (Object.keys(this.errors).length > 0) {
+    //     return; 
+    //   }
+
+    //   try {
+    //     const response = await this.$axios.post("http://127.0.0.1:8000/forgot-password", {
+    //       email: this.email,
+    //     });
+
+    //     if (response.data.result === "OK") {
+    //       this.successMessage = response.data.message || "Instructions have been sent to your email.";  
+    //       this.email = "";
+    //       setTimeout(() => {
+    //         this.$router.push("/cp/login"); 
+    //       }, 5000);
+    //     } else {
+    //       this.errors.general =
+    //         response.data.message || "Something went wrong. Please try again.";
+    //     }
+    //   } catch (error) {
+    //     console.error("Error sending reset email:", error);
+    //     this.errors.general =
+    //       "An unexpected error occurred. Please try again later.";
+    //   }
+    // },
+
     async handleSendResetEmail() {
       this.errors = {};
       this.successMessage = "";
 
-      if (!this.email) {
-        this.errors.email = "Email is required.";
-      } else if (!this.isValidEmail(this.email)) {
-        this.errors.email = "Please enter a valid email.";
-      }
-
-      if (Object.keys(this.errors).length > 0) {
-        return; 
+      if (!this.isValidEmail(this.email)) {
+        this.errors.email = "Please enter a valid email address.";
+        return;
       }
 
       try {
-        const response = await this.$axios.post("/api/cp/forgot-password", {
-          email: this.email,
-        });
 
-        if (response.data.result === "OK") {
-          this.successMessage = "Instructions have been sent to your email.";
+        const response = await axios.post("/forgot-password", { email: this.email });
+
+        if (response.data.status) {
+          this.successMessage = "Reset instructions have been sent to your email.";
           this.email = "";
-          setTimeout(() => {
-            this.$router.push("/cp/login"); // Перенаправление через 5 секунд
-          }, 5000);
-        } else {
-          this.errors.general =
-            response.data.message || "Something went wrong. Please try again.";
         }
       } catch (error) {
-        console.error("Error sending reset email:", error);
-        this.errors.general =
-          "An unexpected error occurred. Please try again later.";
+        this.errors.general = error.response?.data?.message || "An error occurred. Please try again.";
       }
     },
-
     isValidEmail(email) {
       const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       return re.test(email);
