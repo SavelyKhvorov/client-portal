@@ -20,7 +20,7 @@
     "description": "The 'Pro Plan' is the ideal choice for developers who demand advanced features and extended functionality. Whether you're working with complex image processing tasks or need to integrate sophisticated audio features into your app, the Pro Plan ensures that you have all the tools at your disposal. Offering a rich set of capabilities, this plan is designed for professionals who want to push the limits of what can be achieved with our SDKs. You’ll enjoy full access to premium features, higher resource limits, and enhanced support, ensuring your project’s success. Choose the Pro Plan to experience the ultimate in SDK technology and support."
   },
   {
-    "name": "Basic",
-    "description": "The 'Basic Plan' offers a more entry-level solution for developers who need the essential features without any of the extras. This plan is designed for small to medium-scale projects, where you may need access to core functionalities such as image editing or basic video processing. It’s perfect for startups or individuals who want to get started without a significant upfront cost. While the Basic Plan provides limited resources compared to higher-tier options, it still offers access to powerful SDK tools that will help you build solid applications. Get started on your journey with the Basic Plan, and scale up as your needs grow."
+    "name": "Webcam Effects Extension",
+    "description": "Description introduced the feature for executing segmentation on WebGPU. Should WebGPU be unavailable, the process will seamlessly switch to CPU mode, utilizing WebAssembly SIMD for optimal performance."
   }
 ]

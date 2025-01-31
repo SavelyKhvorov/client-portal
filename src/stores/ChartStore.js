@@ -20,9 +20,17 @@ export const useChartStore = defineStore('chart', {
           },
         },
       },
-      title: {
-        text: 'Analytics',
-        align: 'left',
+      yaxis: {
+        title: {
+          text: 'Analytics',
+          style: {
+            fontSize: '14px', 
+            fontHeight: '18px',
+            fontWeight: '500', 
+            color: '#6F717C',
+            fontFamily: 'Rubik, sans-serif',
+          },
+        },
       },
       tooltip: {
         x: { format: 'dd MMM yyyy' },

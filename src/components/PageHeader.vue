@@ -101,6 +101,8 @@ export default {
   display: flex;
   align-items: center;
   text-decoration: none;
+  width: 226px;
+  height: 38px;
 }
 
 &__nav {

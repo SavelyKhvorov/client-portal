@@ -36,6 +36,7 @@
     "vue3-apexcharts": "^1.8.0",
     "vue3-datepicker": "^0.4.0",
     "vue3-daterange-picker": "^1.0.1",
+    "vue3-progress": "^0.0.1-beta4",
     "yup": "^1.6.1"
   },
   "devDependencies": {

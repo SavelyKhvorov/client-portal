@@ -11,6 +11,7 @@
             :sdk="item.sdk"
             :platform="item.platform"
             :name="item.name"
+            :status="item.status"
             :period="item.period"
             :limit="item.limit"
             :current="item.current"
@@ -72,10 +73,13 @@ export default {
   }
 
   &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
     width: 100%;
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr; 
+      }
   }
 
   &__card {

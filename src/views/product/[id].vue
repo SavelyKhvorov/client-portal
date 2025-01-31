@@ -2,72 +2,95 @@
   <div class="prod">
     <div class="prod__container">
 
-      <div class="prod__header">
-        <div class="prod__card prod__card--highlight">
-          <div class="prod__card-head">
-            <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
-            <p class="prod__status">{{ productData?.status }}</p>
+
+      <div class="breadscrumbs">
+        <router-link to="/cp/dashboard" class="breadscrumbs__link">Products</router-link>
+        <span>/</span>
+        <router-link :to="{ name: 'ProductDetails', params: { id: productData?.id } }" class="breadscrumbs__link breadscrumbs__link--current"> SDK {{ productData?.sdk }} - {{ productData?.name }}</router-link>
+      </div>
+
+      <div class="prod__card">
+        <div class="prod__header">
+          <div class="prod__title">
+            <div class="prod__icon">
+              <SvgAndroid v-if="productData?.platform === 'android'" />
+              <SvgIOS v-if="productData?.platform === 'ios'" />
+              <SvgWeb v-if="productData?.platform === 'web'" />
+            </div>
+            <span class="prod__sdk">SDK {{ productData?.sdk }}: </span>
+            <span class="prod__name"> {{ productData?.name }}</span> - <span class="prod__platform">{{ productData?.platform }}</span>
           </div>
-          
-          <p class="prod__platform">Platform: {{ productData?.platform }} </p>
-          <h2>{{ productData?.name }}</h2>
-          <p>
-            {{ getSubscriptionDescription(productData?.name) }}
-          </p>
-          <p><strong>{{ subscriptionPeriod }}</strong></p>
-          <p>
-            <strong>
-              {{ productData?.limit === 0 ? 'Unlimited' : `${productData?.current} / ${productData?.limit}` }}
-            </strong>
-          </p>
-        </div>
-        <button type="button" class="btn back-button" @click="ToDashboard">Back</button>
-      </div>
-
-      <!-- <div class="prod__cards">
-        <div class="prod__card">
-          <p class="prod__text">
-            {{ getSdkDescription(productData?.sdk) }}
-          </p>
         </div>
 
-        <div class="prod__card prod__card--highlight">
-          <h1 class="prod__title">SDK: {{ productData?.sdk }}</h1>
-          <p class="prod__platform">Platform: {{ productData?.platform }} </p>
-          <h2>{{ productData?.name }}</h2>
-          <p>
-            {{ getSubscriptionDescription(productData?.name) }}
-          </p>
-          <p><strong>{{ subscriptionPeriod }}</strong></p>
-          <p><strong>{{ productData?.current }} / {{ productData?.limit }}</strong></p>
-        </div>
-      </div> -->
+        <p class="prod__text">
+          {{ getSubscriptionDescription(productData?.name) }}
+        </p>
 
-      <div class="prod__controls">
-        <vue-date-picker
-          v-model:value="value1"
-          :type="date"
-          range
-          :shortcuts="shortcuts"
-          :popupVisible="true"
-          :editable="true"
-          @change="updateChart"
-          class="prod__calendar"
-        />
-        <div class="prod__analytics-buttons">
-          <!-- <button class="btn chart-button--cumulative" @click="switchChart('chart1')">Cumulative</button> -->
-          <button class="btn chart-button" @click="switchChart('chart2')">Daily</button>
+        <div class="prod__usage-block">
+          <p>Sessions Used</p>
+          <div class="prod__usage-status" v-if="productData?.limit != 0">
+            <span class="prod__current" :class="usageColor">{{ productData?.current }}</span> / <span> {{ productData?.limit }}</span>
+          </div>
+          <div class="prod__usage-status" v-else>
+            Unlimited
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress" :style="{ width: progressPercentage + '%', backgroundColor: progressBarColor }"></div>
+        </div>
+
+        <div class="prod__body">
+          <div class="prod__customer-id">
+            CustomerID: 
+            <div class="prod__id-btn">
+              <span class="prod__id">{{ productData?.customerId }}</span>
+              <button class="prod__copy-btn" @click="copyToClipboard(productData?.customerId)">
+                <SvgCopy v-if="!isCopied" />
+                <SvgCheck v-if="isCopied" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="prod__footer">
+          <div class="prod__subscription-info">
+            <span class="prod__status" :class="statusColor">{{ productData?.status }} Subscription </span> 
+            <span class="prod__expire-date">{{ subscriptionPeriod }}</span>
+          </div>
         </div>
       </div>
 
-      <div class="prod__chart-container">
-        <apexchart
-          type="line"
-          :options="chartStore.chartOptions"
-          :series="chartStore.chartSeries"
-          height="400"
-        />
+      <div class="prod__chart-block">
+        <div class="prod__chart-container">
+          <apexchart
+            type="line"
+            :options="chartStore.chartOptions"
+            :series="chartStore.chartSeries"
+            height="300"
+          />
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prod__controls">
+          <vue-date-picker
+            v-model:value="value1"
+            :type="date"
+            range
+            :shortcuts="shortcuts"
+            :popupVisible="true"
+            :editable="true"
+            @change="updateChart"
+            class="prod__calendar"
+          />
+          <div class="prod__analytics-buttons">
+            <!-- <button class="btn chart-button--cumulative" @click="switchChart('chart1')">Cumulative</button> -->
+            <button class="btn chart-button" @click="switchChart('chart2')">Daily</button>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -80,8 +103,23 @@ import 'vue-datepicker-next/index.css';
 import ApexCharts from 'vue3-apexcharts';
 import descriptionData from '@/json/description.json';
 
+import SvgCopy from '@/components/icons/SvgCopy.vue';
+import SvgAndroid from '@/components/icons/SvgAndroid.vue';
+import SvgIOS from '@/components/icons/SvgIOS.vue';
+import SvgWeb from '@/components/icons/SvgWeb.vue';
+import SvgCheck from '@/components/icons/SvgCheck.vue';
+
+
 export default {
-  components: { VueDatePicker, apexchart: ApexCharts },
+  components: {
+    VueDatePicker,
+    apexchart: ApexCharts,
+    SvgCopy,
+    SvgAndroid,
+    SvgIOS,
+    SvgWeb,
+    SvgCheck
+  },
   setup() {
     const chartStore = useChartStore();
     const AnalyticsStore = useAnalyticsStore();
@@ -97,6 +135,7 @@ export default {
       selectedPlatforms: [],
       selectedSdks: [],
       value1: [],
+      isCopied: false, 
       currentChartType: 'chart2',
       shortcuts: [
       {
@@ -192,17 +231,26 @@ export default {
         console.error('Error fetching product data:', error);
       }
     },
-    // getSdkDescription(sdkName) {
-    //   const sdk = this.descriptionData.find((item) => item.sdk === sdkName);
-    //   return sdk ? sdk.description : "Description not available";
-    // },
+
     getSubscriptionDescription(name) {
       const subscription = this.descriptionData.find((item) => item.name === name);
       return subscription ? subscription.description : "Description not available";
     },
+
     ToDashboard() {
       this.$router.push('/cp/dashboard');
     },
+
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          this.isCopied = true;
+          setTimeout(() => {
+            this.isCopied = false;
+          }, 1000);
+        })
+    },
+
     calculateEndDate() {
       if (!this.productData || !this.productData.platform) {
         console.error("Platform data is not available.");
@@ -227,6 +275,7 @@ export default {
 
       return predictedEndDate.toISOString().split("T")[0];
     },
+
     switchChart(type) {
       this.currentChartType = type;
       if (type === 'chart1') {
@@ -380,9 +429,40 @@ export default {
         return `${start.split(" ")[0]} ~ ${end.split(" ")[0]}`;
       }
       return "No subscription data";
+    },
+    progressPercentage() {
+      return Math.min((this.productData?.current / this.productData?.limit) * 100, 100).toFixed(2);
+    },
+    progressBarColor() {
+      switch (this.flag) {
+        case 'green':
+          return '#1EB13E';
+        case 'yellow':
+          return '#FFAC2F';
+        case 'red':
+          return '#F76A3E';
+        default:
+          return '#1EB13E';
+      }
+    },
+    usageColor() {
+      switch (this.flag) {
+        case 'green':
+          return 'status-green';
+        case 'yellow':
+          return 'status-yellow';
+        case 'red':
+          return 'status-red';
+        default:
+          return 'status-green';
+      }
+    },
+    statusColor(){
+      if (this.flag === 'red') {
+        return 'status-red';
+      }
     }
   },
-
   async mounted() {
     await this.fetchProductData(); 
 
@@ -390,20 +470,6 @@ export default {
     const endDate = new Date(this.productData.period.end);
     this.value1 = [subscriptionStartDate, endDate];
     this.updateChart(); 
-
-    // const predictedEndDate = this.calculateEndDate();
-
-    // if (predictedEndDate !== "Unknown") {
-    //   const subscriptionStartDate = new Date(this.productData.period.start);
-    //   const endDate = new Date(predictedEndDate);
-    //   endDate.setDate(endDate.getDate() + 10); 
-
-    //   this.value1 = [subscriptionStartDate, endDate];
-    //   this.updateChart(); 
-    // } else {
-    //   console.error("Unable to calculate the predicted end date.");
-    // }
-
   },
   watch: {
     value1: {
@@ -428,121 +494,33 @@ export default {
     color: #333;
   }
 
-
-  &__header {
-    display: flex;
-    justify-content: space-between; 
-    align-items: flex-start; 
-    width: 100%;
-    margin-bottom: 10px;
-    margin-top: -20px;
-  }
-
-  &__title-container {
-    display: flex;
-    flex-direction: column; 
-  }
-
-
-  &__title {
-    font-size: 36px; 
-    font-weight: bold;
-    color: #1E2362;
-    margin: 0;
-    flex-grow: 1; 
-  }
-
-  &__platform {
-    font-size: 18px;
-    color: #666;
-    margin: 0;
-  }
-
-  &__status{
-    font-size: 25px;
-    font-weight: bold;
-    color: @blue;
-    text-transform: uppercase;
-    align-self: center;
-    margin: 0;
-  }
-
-  &__cards {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  &__card {
-    flex: 1;
-    min-width: 300px; 
-    max-width: 600px;  
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-    box-sizing: border-box; 
-    word-wrap: break-word; 
-  }
-
-  &__card--highlight {
-    background-color: #f0f4ff;
-    border-color: #a7b3ff;
-  }
-
-  &__card-head{
-    display: flex;
-    width: 100%;
-  }
-
   &__controls {
     display: flex;
     justify-content: space-between; 
-    align-items: flex-start; 
+    align-items: center; 
     width: 100%;
-
   }
 
-  &__header {
-    display: flex;
-    justify-content: space-between; 
-    align-items: flex-start; 
-    width: 100%;
-    margin-bottom: 10px;
-    margin-top: -20px;
-  }
-
-
-  &__checkbox-group {
-    display: flex;
-    justify-content: flex-start; 
-    gap: 80px; 
-  }
-
-  &__checkbox-block {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0 10px 0px 10px;
+  &__chart-block{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: @white;
+    border-radius: 8px;
   }
 
   &__chart-container {
     width: 100%;
     align-self: center;
-    margin-top: 20px;
-    background-color: @white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
   }
 
   &__calendar {
     align-self: center;
     width: 100%;
     max-width: 380px; 
-    padding: 10px;
-    border-radius: 8px;
-    background-color: @white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    // border-radius: 8px;
+    // background-color: @white;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &__label{
@@ -555,6 +533,133 @@ export default {
     gap: 10px;
   }
 
+  &__card {
+    max-width: 50%;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    font-family: Rubik, sans-serif;
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  }
+
+  &__icon{
+    width: 20px;
+    height: 20px;
+    color: #6F717C;
+    margin-right: 5px;
+  }
+
+  &__sdk {
+    color: #6F717C;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #333;
+    text-transform: capitalize;
+  }
+
+  &__text{
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #6F717C;
+    text-align: justify;
+  }
+
+  &__usage-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    margin-bottom: -20px;
+  }
+
+  &__usage-status {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+  }
+
+
+  &__body {
+    display: flex; 
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 10px 30px;
+  }
+
+  &__customer-id {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: black;
+    gap: 8px;
+  }
+
+  &__id-btn{
+    display: flex;
+  }
+
+  &__id {
+    font-family: monospace;
+    font-size: 14px;
+    color: #6F717C;
+  }
+
+  &__copy-btn {
+    align-self: center;
+    width: 14px;
+    height: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6F717C;
+    margin-left: 10px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-transform: capitalize;
+  }
+
+  &__subscription-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    color: black;
+  }
+
+  &__expire-date{
+    font-weight: 400;
+    color:#6F717C;
+  }
 }
 
 .platforms-grid {
@@ -620,12 +725,60 @@ export default {
   }
 }
 
-
 input[type="checkbox"] {
   margin-right: 8px;
   accent-color: @blue;
   width: 18px;
   height: 18px;
+}
+.progress {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+.progress-bar {
+  background: #f0f0f0;
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+}
+.status-green {
+  color: #1EB13E;
+}
+.status-yellow {
+  color: #FFAC2F;
+}
+.status-red {
+  color: #F76A3E;
+}
+.divider {
+  width: 100%; 
+  height: 1px; 
+  background-color: #EAECF0;
+  margin: 0; 
+}
+
+.breadscrumbs{
+  &__link{
+    display: inline;
+    margin-right: 10px;
+    color: @black;
+    font-size: 16px;
+    line-height: 22px;
+    text-decoration: none;
+    transition: color 0.2s;
+    text-transform: capitalize;
+
+    &:hover{
+      color: @blue2;
+    }
+
+    &--current{
+      color:#6F717C;
+      &:hover{
+      color: #6F717C;
+    }
+    }
+  }
 }
 
 </style>

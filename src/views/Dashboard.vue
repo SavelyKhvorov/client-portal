@@ -4,7 +4,10 @@
       <div class="dashboard__header">
         <h1 class="dashboard__title">Products</h1>
         <!-- <router-link to="/cp/total-analytics" class="dashboard__link">Go to Total Analytics</router-link> -->
-        <button @click="handleAuth" class="page-header__login-button">Logout</button>
+        <button @click="handleAuth" class="logout-button">
+          <SvgLogout class="logout-icon"/>
+          Logout
+        </button>
       </div>
       <ListCards />
     </div>
@@ -14,10 +17,12 @@
 <script>
 import ListCards from "@/components/ListCards.vue";
 import { useAuthStore } from '@/stores/AuthStore.js';
+import SvgLogout from "@/components/icons/SvgLogout.vue";
 
 export default {
   components: {
     ListCards,
+    SvgLogout
   },
   methods: {
   handleAuth() {
@@ -50,6 +55,7 @@ export default {
   &__title {
     margin: 25px 0px 0px 0px;
     color: @black;
+    font-weight: 500;
   }
 
   &__header {
@@ -74,5 +80,27 @@ export default {
       color: @white; 
     }
   }
+
+  .logout-button {
+  display: flex;
+  align-items: center; 
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: @blue2;
+  border: solid 2px #F9F9F9;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    border: solid 2px @blue2;
+  }
+}
+
+.logout-icon {
+  width: 16px;
+  height: 16px;
+  color: @blue2; 
+  transition: color 0.3s;
+}
 }
 </style>
