@@ -50,7 +50,12 @@ export default {
 .dashboard {
   &__container {
     max-width: 1440px;
-    padding: 0 100px;
+    margin: 0 auto;
+    padding: 0 20px; 
+
+    @media (min-width: 1440px) {
+        padding: 0 135px;
+      }
   }
 
   &__title {

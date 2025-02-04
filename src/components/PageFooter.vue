@@ -3,9 +3,12 @@
     <div class="footer__container">
 
       <div class="footer__section">
-        <RouterLink to="/" class="footer__logo-wrap">
+        <!-- <RouterLink to="/" class="footer__logo-wrap">
           <SvgLogo />
-        </RouterLink>
+        </RouterLink> -->
+        <a href="/" class="footer__logo-wrap">
+        <SvgLogo />
+      </a>
       </div>
 
       <div class="footer__section">

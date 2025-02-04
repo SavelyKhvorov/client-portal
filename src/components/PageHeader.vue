@@ -2,19 +2,25 @@
   <header class="page-header">
     <div class="page-header__container">
 
-      <RouterLink to="/" class="page-header__logo-wrap">
+      <!-- <RouterLink to="/" class="page-header__logo-wrap">
         <SvgLogo />
-      </RouterLink>
+      </RouterLink> -->
+
+      <a href="/" class="page-header__logo-wrap">
+        <SvgLogo />
+      </a>
 
       
       <nav class="page-header__nav">
-        <div v-for="tab in tabs" :key="tab.title" class="page-header__nav-item">
-          <RouterLink
+        <div class="page-header__nav-item">
+          <!-- <RouterLink
             :to="{ path: tab.path, query: tab.query }"
             class="page-header__nav-link"
           >
             {{ tab.title }}
-          </RouterLink>
+          </RouterLink> -->
+          <a href="/contacts" class="page-header__nav-link">Contacts</a>
+
         </div>
       </nav>
 
@@ -38,11 +44,11 @@ export default {
     SvgLogo,
   },
   data() {
-    return {
-      tabs: [
-        { title: 'Contact Us', path: '/contacts'},
-      ],
-    };
+    // return {
+    //   tabs: [
+    //     { title: 'Contact Us', path: '/contacts'},
+    //   ],
+    // };
   },
   methods: {
     toTrial(){
