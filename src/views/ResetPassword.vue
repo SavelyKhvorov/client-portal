@@ -75,7 +75,7 @@ export default {
       }
       
       try {
-        await this.$axios.post('/reset-password', {
+        await this.$axios.post('/api/cp/reset-password', {
           password: this.password,
           password_confirmation: this.confirmPassword,
           token: this.$route.params.token, 

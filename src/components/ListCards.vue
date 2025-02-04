@@ -42,7 +42,7 @@ export default {
   methods: {
     async fetchProducts() {
       try {
-        const response = await this.$axios.get("/api/cp/products");
+        const response = await this.$axios.get("http://192.168.0.11:5000/api/cp/products");
         if (response.data.result === "OK") {
           this.productsList = response.data.response; 
         }
@@ -63,7 +63,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
   }
 
   &__wrapper {

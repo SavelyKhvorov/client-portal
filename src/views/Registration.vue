@@ -4,12 +4,6 @@
 
       <div class="registration__card">
 
-        <!-- <div class="registration__svg-container">
-          <SvgOrangeWaves class="SvgOrangeWaves" />
-          <SvgYellowWaves class="SvgYellowWaves" />
-          <SvgBlueStain class="SvgBlueStain" />
-        </div> -->
-
         <h1 class="registration__title">Join us today!</h1>
         <p class="registration__subtitle">Create your account to get started</p>
 

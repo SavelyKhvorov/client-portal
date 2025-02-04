@@ -2,7 +2,7 @@
   <header class="page-header">
     <div class="page-header__container">
 
-      <RouterLink to="/cp/" class="page-header__logo-wrap">
+      <RouterLink to="/" class="page-header__logo-wrap">
         <SvgLogo />
       </RouterLink>
 
@@ -22,7 +22,7 @@
       <div class="page-header__actions">
         <!-- <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
         </button> -->
-        <button class="page-header__trial-button">GET FREE TRIAL</button>
+        <button class="page-header__trial-button" @click="toTrial">GET FREE TRIAL</button>
       </div>
     </div>
   </header>
@@ -40,15 +40,14 @@ export default {
   data() {
     return {
       tabs: [
-        { title: 'Products', path: '/cp/products'},
-        { title: 'Features', path: '/cp/features'},
-        { title: 'Solutions', path: '/cp/solutions'},
-        { title: 'Blog', path: '/cp/blog'},
-        { title: 'Contact Us', path: '/cp/contact'},
+        { title: 'Contact Us', path: '/contacts'},
       ],
     };
   },
   methods: {
+    toTrial(){
+      this.$router.push('/cp/get-free-trial');
+    },
     handleAuth() {
     const authStore = useAuthStore();
 
@@ -80,7 +79,8 @@ export default {
 .page-header {
   background-color: white;
   border-bottom: 1px solid #e5e5e5;
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
+  padding: 0.5rem 135px 0.5rem 135px ;
   display: flex;
   justify-content: center;
 
@@ -89,7 +89,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 1440px;
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -107,8 +107,10 @@ export default {
 
 &__nav {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.5rem;
+  margin-left: auto;
+  padding: 0 20px 0;
 }
 
 &__nav-item {

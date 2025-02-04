@@ -66,7 +66,7 @@ export default {
 
       try {
         // await getToken();
-        const response = await this.$axios.post("/forgot-password", {
+        const response = await this.$axios.post("api/cp/forgot-password", {
           email: this.email
         });
 

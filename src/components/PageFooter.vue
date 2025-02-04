@@ -3,7 +3,7 @@
     <div class="footer__container">
 
       <div class="footer__section">
-        <RouterLink to="/cp/" class="footer__logo-wrap">
+        <RouterLink to="/" class="footer__logo-wrap">
           <SvgLogo />
         </RouterLink>
       </div>
@@ -12,22 +12,22 @@
         <h4 class="footer__title">Video SDK</h4>
         <ul class="footer__list">
           <li class="footer__item">
-            <a href="#" class="footer__link">Windows</a>
+            <a href="https://github.com/EffectsSDK/web-integration-sample" class="footer__link">Web</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">Electron</a>
+            <a href="https://github.com/EffectsSDK/electron-integration-sample" class="footer__link">Electron</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">iOS (Swift)</a>
+            <a href="https://github.com/EffectsSDK/swift-video-effects-sdk" class="footer__link">iOS (Swift)</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">iOS (Objective-C)</a>
+            <a href="https://github.com/EffectsSDK/ios-xcframework-integration-sample" class="footer__link">iOS (Objective-C)</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">Android</a>
+            <a href="https://github.com/EffectsSDK/android-integration-sample" class="footer__link">Android</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">Desktop (Win, Mac, Linux)</a>
+            <a href="https://github.com/EffectsSDK/desktop-demo-samples" class="footer__link">Desktop (Win, Mac, Linux)</a>
           </li>
         </ul>
       </div>
@@ -36,10 +36,10 @@
         <h4 class="footer__title">Audio SDK</h4>
         <ul class="footer__list">
           <li class="footer__item">
-            <a href="#" class="footer__link">Web</a>
+            <a href="https://github.com/EffectsSDK/audio-effects-sdk-web" class="footer__link">Web</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">Windows</a>
+            <a href="https://github.com/EffectsSDK/audio-desktops" class="footer__link">Windows</a>
           </li>
         </ul>
       </div>
@@ -48,13 +48,10 @@
         <h4 class="footer__title">Extensions</h4>
         <ul class="footer__list">
           <li class="footer__item">
-            <a href="#" class="footer__link">Why extensions?</a>
+            <a href="https://chromewebstore.google.com/detail/ai-webcam-effects-+-recor/iedbphhbpflhgpihkcceocomcdnemcbj" class="footer__link">AI Webcam Effects</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">AI Webcam Effects</a>
-          </li>
-          <li class="footer__item">
-            <a href="#" class="footer__link">Background Noise Remove</a>
+            <a href="https://chromewebstore.google.com/detail/background-noise-remover/njmhcidcdbaannpafjdljminaigdgolj" class="footer__link">Background Noise Remove</a>
           </li>
         </ul>
       </div>
@@ -63,10 +60,10 @@
         <h4 class="footer__title">Documentation</h4>
         <ul class="footer__list">
           <li class="footer__item">
-            <a href="#" class="footer__link">Best Practices</a>
+            <a href="https://github.com/EffectsSDK/web-integration-sample/blob/main/docs/Best-Practices.md" class="footer__link">Best Practices</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">API</a>
+            <a href="=https://effectssdk.ai/sdk/web/docs/classes/tsvb.html" class="footer__link">API</a>
           </li>
         </ul>
       </div>
@@ -75,10 +72,10 @@
         <h4 class="footer__title">Demo</h4>
         <ul class="footer__list">
           <li class="footer__item">
-            <a href="#" class="footer__link">Video</a>
+            <a href="https://effectssdk.ai/sdk/dev/demo-latest.html" class="footer__link">Video</a>
           </li>
           <li class="footer__item">
-            <a href="#" class="footer__link">Audio</a>
+            <a href="https://effectssdk.ai/products/audio-effects-sdk" class="footer__link">Audio</a>
           </li>
         </ul>
       </div>
@@ -88,9 +85,9 @@
       <div class="footer__bottom">
         <p class="footer__copyright">©Damiko Inc. 2025. All rights reserved.</p>
         <div class="footer__links">
-          <a href="#" class="footer__link">Terms and Conditions</a>
-          <a href="#" class="footer__link">Privacy Policy</a>
-          <a href="#" class="footer__link">Refund Policy</a>
+          <a href="/terms" class="footer__link">Terms and Conditions</a>
+          <a href="/privacy-policy" class="footer__link">Privacy Policy</a>
+          <a href="/refund-policy" class="footer__link">Refund Policy</a>
         </div>
       </div>
 
@@ -112,18 +109,17 @@ export default {
 .footer {
   background-color: #f8f9fa;
   padding: 30px;
-  font-family: Arial, sans-serif;
+  flex-shrink: 0;
 
   &__container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    max-width: 1200px;
+    max-width: 1440px;
     width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+    margin: 0 auto;
+    padding: 0 135px;
+
   }
 
   &__logo-wrap {
@@ -182,9 +178,10 @@ export default {
     align-self: center;
     text-decoration: none;
     color: #6F717C;
+    transition: all 0.3s ease-in-out;
 
     &:hover {
-      text-decoration: underline;
+      color: @blue2;
     }
   }
 

@@ -8,8 +8,8 @@
           <SvgIOS v-if="platform === 'ios'" />
           <SvgWeb v-if="platform === 'web'" />
         </div>
-        <span class="card__sdk">SDK {{ sdk }}: </span>
-        <span class="card__name"> {{ name }}</span> - <span class="card__platform">{{ platform }}</span>
+        <span class="card__sdk">{{ sdk }} SDK for {{ platform }}: </span>
+        <span class="card__name"> {{ name }}</span>
       </div>
     </div>
 

@@ -49,7 +49,8 @@ export default {
 <style lang="less">
 .dashboard {
   &__container {
-    padding: 0 100px 0 100px;
+    max-width: 1440px;
+    padding: 0 100px;
   }
 
   &__title {
