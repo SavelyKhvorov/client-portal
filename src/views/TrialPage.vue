@@ -171,9 +171,11 @@ export default {
 }
 
 .form__error {
-  color: #e74c3c;
+  color: #d9534f;
   font-size: 14px;
-  margin-top: 4px;
+  margin-top: 5px;
+  min-height: 18px;
+  display: block;
 }
 
 .btn-trial {

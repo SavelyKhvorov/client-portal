@@ -28,7 +28,6 @@
       <div class="page-header__actions">
         <!-- <button @click="handleAuth" class="page-header__login-button">{{ isAuthenticated ? 'Sign Out' : 'Sign In' }}
         </button> -->
-        <button class="page-header__trial-button" @click="toTrial">GET FREE TRIAL</button>
       </div>
     </div>
   </header>
@@ -51,9 +50,6 @@ export default {
     // };
   },
   methods: {
-    toTrial(){
-      this.$router.push('/cp/get-free-trial');
-    },
     handleAuth() {
     const authStore = useAuthStore();
 

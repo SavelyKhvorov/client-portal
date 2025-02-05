@@ -127,12 +127,12 @@ export default {
   box-sizing: border-box; 
 }
 .login{
-
   &__container{
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 25px 0;
     min-height: 100vh;
   }
 
@@ -141,7 +141,7 @@ export default {
   border-radius: 12px;
   padding: 32px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  max-width: 280px;
   width: 100%;
   text-align: center;
   }
@@ -247,6 +247,15 @@ export default {
   border: 1px solid #f5c6cb;
   border-radius: 4px;
   text-align: center;
+  // min-height: 40px;
+}
+
+.form__error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 5px;
+  min-height: 18px;
+  display: block;
 }
 
 </style>

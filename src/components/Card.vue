@@ -8,15 +8,18 @@
           <SvgIOS v-if="platform === 'ios'" />
           <SvgWeb v-if="platform === 'web'" />
         </div>
-        <span class="card__sdk">{{ sdk }} SDK for {{ platform }}: </span>
+        <span class="card__sdk">{{ sdk }} SDK for {{ platform }}: </span>&nbsp;
         <span class="card__name"> {{ name }}</span>
       </div>
     </div>
 
     <div class="card__usage-block">
       <p>Sessions Used</p>
-      <div class="card__usage-status">
-        <span class="card__current" :class="usageColor">{{ current }}</span> / <span class="card__limit">{{ limit }}</span>
+      <div class="card__usage-status" v-if="limit != 0">
+        <span class="card__current" :class="usageColor">{{ current }}</span> / <span> {{ limit }}</span>
+      </div>
+      <div class="card__usage-status" v-else>
+          Unlimited
       </div>
     </div>
 

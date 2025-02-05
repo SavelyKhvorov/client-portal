@@ -5,8 +5,8 @@
 
       <div class="breadscrumbs">
         <router-link to="/cp/dashboard" class="breadscrumbs__link">Products</router-link>
-        <span>/</span>
-        <router-link :to="{ name: 'ProductDetails', params: { id: productData?.id } }" class="breadscrumbs__link breadscrumbs__link--current"> SDK {{ productData?.sdk }} - {{ productData?.name }}</router-link>
+        <span>/</span>&nbsp;
+        <router-link :to="{ name: 'ProductDetails', params: { id: productData?.id } }" class="breadscrumbs__link breadscrumbs__link--current"> {{ productData?.sdk }} SDK for {{ productData?.platform }}: {{ productData?.name }}</router-link>
       </div>
 
       <div class="prod__card">
@@ -17,14 +17,11 @@
               <SvgIOS v-if="productData?.platform === 'ios'" />
               <SvgWeb v-if="productData?.platform === 'web'" />
             </div>
-            <span class="prod__sdk">SDK {{ productData?.sdk }}: </span>
-            <span class="prod__name"> {{ productData?.name }}</span> - <span class="prod__platform">{{ productData?.platform }}</span>
+            <span class="card__sdk">{{ productData?.sdk }} SDK for {{ productData?.platform }}: </span>&nbsp;
+            <span class="card__name"> {{ productData?.name }}</span>
           </div>
         </div>
 
-        <p class="prod__text">
-          {{ getSubscriptionDescription(productData?.name) }}
-        </p>
 
         <div class="prod__usage-block">
           <p>Sessions Used</p>
@@ -492,6 +489,7 @@ export default {
     background-color: #f9f9f9;
     font-family: @font1;
     color: #333;
+    width: 100%;
   }
 
   &__controls {
@@ -534,7 +532,7 @@ export default {
   }
 
   &__card {
-    max-width: 50%;
+    width: 50%;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 25px;

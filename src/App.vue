@@ -32,7 +32,6 @@ export default {
   }
   .main-content {
     flex: 1 0 auto;
-    margin: 0 auto;
   }
 
   .page-footer {
