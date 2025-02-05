@@ -132,7 +132,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px 0;
+    padding: 25px 135px;
     min-height: 100vh;
   }
 
@@ -141,7 +141,7 @@ export default {
   border-radius: 12px;
   padding: 32px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 280px;
+  max-width: 400px;
   width: 100%;
   text-align: center;
   }

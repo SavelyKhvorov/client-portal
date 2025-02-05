@@ -484,12 +484,15 @@ export default {
   &__container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 20px;
-    padding: 40px 80px 40px 80px;
     background-color: #f9f9f9;
     font-family: @font1;
     color: #333;
-    width: 100%;
+
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 40px 135px;
   }
 
   &__controls {
