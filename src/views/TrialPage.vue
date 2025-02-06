@@ -1,6 +1,16 @@
 <template>
   <div class="trial">
     <div class="trial__container">
+
+      <div class="breadscrumbs">
+        <router-link to="/cp/dashboard" class="breadscrumbs__link">Products</router-link>
+        <span>/</span>&nbsp;
+        <router-link to="/cp/get-free-trial" class="breadscrumbs__link breadscrumbs__link--current">
+          Request Trial
+        </router-link>
+      </div>
+
+
       <div class="trial__card">
         <h1 class="trial__title">Request Trial</h1>
         <p class="trial__subtitle">Submit the form to get full-featured SDK</p>
@@ -167,9 +177,12 @@ export default {
 <style lang="less">
 .trial {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   min-height: 100vh;
+
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 135px;
 
   &__card {
     position: relative;
@@ -270,6 +283,29 @@ export default {
   border-radius: 4px;
   text-align: center;
 }
-
 }
+.breadscrumbs{
+  &__link{
+    display: inline;
+    margin-right: 10px;
+    color: @black;
+    font-size: 16px;
+    line-height: 22px;
+    text-decoration: none;
+    transition: color 0.2s;
+    text-transform: capitalize;
+
+    &:hover{
+      color: @blue2;
+    }
+
+    &--current{
+      color:#6F717C;
+      &:hover{
+      color: #6F717C;
+    }
+    }
+  }
+}
+
 </style>

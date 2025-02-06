@@ -33,7 +33,18 @@ export const useChartStore = defineStore('chart', {
         },
       },
       tooltip: {
-        x: { format: 'dd MMM yyyy' },
+        shared: true,
+        followCursor: true,
+        y: {
+          formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+            const seriesName = w.config.series[seriesIndex].name;
+            if (seriesName === 'ips') {
+              const ips = w.config.series[seriesIndex].data[dataPointIndex]?.ips;
+              return ips ? ips.join(', ') : 'No IPs';
+            }
+            return value;
+          },
+        },
       },
     },
   }),
@@ -54,6 +65,8 @@ export const useChartStore = defineStore('chart', {
         },
       };
     },
+
+
   },
 
 });

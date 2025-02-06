@@ -257,7 +257,7 @@ export default {
       const remainingLimit = this.productData?.limit - this.productData?.current;
 
       const dailyUsage = Math.round(
-        this.productData.data.reduce((sum, item) => sum + item.value, 0) / this.productData.data.length
+        this.productData.sessions.reduce((sum, item) => sum + item.value, 0) / this.productData.data.length
       );
 
       if (dailyUsage === 0) {
@@ -297,6 +297,51 @@ export default {
     },
 
     updateChart() {
+      // if (!this.productData) {
+      //   console.warn('No product data available. Skipping chart update.');
+      //   return;
+      // }
+
+      // const [startDate, endDate] = this.value1.map((date) => new Date(date));
+      // const combinedData = [];
+      // let annotations = [];
+
+      // const platform = this.productData.platform;
+
+      // if (!platform) {
+      //   console.warn('No platform data found');
+      //   return;
+      // }
+
+      //   const platformData = this.productData;
+      //   if (!platformData) {
+      //     console.warn(`No platform data found for platform: ${platform}`);
+      //     return;
+      //   }
+
+      //   const dataByDate = platformData.sessions.reduce((acc, item) => {
+      //     const dateStr = new Date(item.date).toISOString().split('T')[0];
+      //     acc[dateStr] = item.value;
+      //     return acc;
+      //   }, {});
+
+      //   const filledData = [];
+      //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      //     const dateStr = d.toISOString().split('T')[0];
+      //     filledData.push({
+      //       x: new Date(dateStr).getTime(),
+      //       y: dataByDate[dateStr] || 0,
+      //     });
+      //   }
+        
+
+      //   const chartData = [{
+      //     name: `${this.productData.sdk} - ${platformData.platform}`,
+      //     data: filledData,
+      //   }];
+
+      //   this.chartStore.updateChart(chartData, []);
+
       if (!this.productData) {
         console.warn('No product data available. Skipping chart update.');
         return;
@@ -306,118 +351,75 @@ export default {
       const combinedData = [];
       let annotations = [];
 
-      if (this.currentChartType === 'chart1') {
-        let totalLimit = 0;
-        let totalCurrent = 0;
-
-        const platformData = this.productData;
-
-        if (!platformData) {
-          console.warn('No platform data found');
-          return;
-        }
-
-        const dataByDate = platformData.data.reduce((acc, item) => {
-          acc[new Date(item.date).toISOString().split('T')[0]] = item.value;
-          return acc;
-        }, {});
-
-        totalLimit += platformData.limit;
-        totalCurrent += platformData.current;
-
-        const filledData = [];
-        let cumulativeSum = platformData.current;
-        let dailyUsageSum = platformData.data.reduce((sum, item) => sum + item.value, 0);
-        let dailyUsageAvg = Math.round(dailyUsageSum / platformData.data.length);
-
-        let predictedEndDate = null;
-
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-          const dateStr = d.toISOString().split('T')[0];
-          const value = dataByDate[dateStr] || 0;
-          cumulativeSum += value;
-
-          filledData.push({
-            x: new Date(dateStr).getTime(),
-            y: Math.round(cumulativeSum),
-          });
-
-          if (!predictedEndDate && cumulativeSum >= platformData.limit) {
-            predictedEndDate = new Date(d);
-          }
-
-          if (!dataByDate[dateStr] && d > new Date(platformData.data[platformData.data.length - 1].date)) {
-            cumulativeSum += dailyUsageAvg;
-            filledData.push({
-              x: new Date(d).getTime(),
-              y: Math.round(cumulativeSum),
-            });
-
-            if (!predictedEndDate && cumulativeSum >= platformData.limit) {
-              predictedEndDate = new Date(d);
-            }
-          }
-        }
-
-        combinedData.push({
-          name: `${this.productData.sdk} - ${this.productData.platform}`,
-          data: filledData,
-        });
-
-        if (predictedEndDate) {
-          annotations.push({
-            x: predictedEndDate.getTime(),
-            strokeDashArray: 4,
-            borderColor: '#FF4560',
-            label: {
-              style: {
-                color: '#fff',
-                background: '#FF4560',
-              },
-              text: `End Date: ${predictedEndDate.toISOString().split('T')[0]}`,
-            },
-          });
-        }
-
-        this.chartStore.updateChart(combinedData, annotations);
-
-      } else if (this.currentChartType === 'chart2') {
-        const platform = this.productData.platform;
-        if (!platform) {
-          console.warn('No platform data found');
-          return;
-        }
-
-        const platformData = this.productData;
-        if (!platformData) {
-          console.warn(`No platform data found for platform: ${platform}`);
-          return;
-        }
-
-        const dataByDate = platformData.data.reduce((acc, item) => {
-          const dateStr = new Date(item.date).toISOString().split('T')[0];
-          acc[dateStr] = item.value;
-          return acc;
-        }, {});
-
-        const filledData = [];
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-          const dateStr = d.toISOString().split('T')[0];
-          filledData.push({
-            x: new Date(dateStr).getTime(),
-            y: dataByDate[dateStr] || 0,
-          });
-        }
-
-        const chartData = [{
-          name: `${this.productData.sdk} - ${platformData.platform}`,
-          data: filledData,
-        }];
-
-        this.chartStore.updateChart(chartData, []);
+      const platformData = this.productData;
+      if (!platformData) {
+        console.warn('No platform data found');
+        return;
       }
+
+      const sessionsByDate = platformData.sessions.reduce((acc, item) => {
+        acc[new Date(item.date).toISOString().split('T')[0]] = item.value;
+        return acc;
+      }, {});
+
+      const sessionsData = [];
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        sessionsData.push({
+          x: new Date(dateStr).getTime(),
+          y: sessionsByDate[dateStr] || 0,
+        });
+      }
+
+      combinedData.push({
+        name: `sessions`,
+        data: sessionsData,
+      });
+
+
+      // if (platformData.ips && platformData.ips.length > 0) {
+      //   const uniqueIpsByDate = platformData.ips.reduce((acc, item) => {
+      //     const dateStr = new Date(item.date).toISOString().split('T')[0];
+      //     acc[dateStr] = (acc[dateStr] || 0) + 1; 
+      //     return acc;
+      //   }, {});
+
+      //   const ipsData = [];
+      //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      //     const dateStr = d.toISOString().split('T')[0];
+      //     ipsData.push({
+      //       x: new Date(dateStr).getTime(),
+      //       y: uniqueIpsByDate[dateStr] || 0,
+      //     });
+      //   }
+
+      if (platformData.ips && platformData.ips.length > 0) {
+        const ipsByDate = platformData.ips.reduce((acc, item) => {
+          const dateStr = new Date(item.date).toISOString().split('T')[0];
+          if (!acc[dateStr]) acc[dateStr] = [];
+          acc[dateStr].push(item.value);
+          return acc;
+        }, {});
+
+        const ipsData = [];
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+          const dateStr = d.toISOString().split('T')[0];
+          ipsData.push({
+            x: new Date(dateStr).getTime(),
+            y: ipsByDate[dateStr]?.length || 0, 
+            ips: ipsByDate[dateStr] || [], 
+          });
+        }
+
+      combinedData.push({
+        name: `ips`,
+        data: ipsData,
+      });
     }
-  },
+
+  this.chartStore.updateChart(combinedData, annotations);
+      }
+    },
 
   computed: {
     subscriptionPeriod() {
