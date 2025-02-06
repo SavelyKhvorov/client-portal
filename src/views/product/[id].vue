@@ -297,50 +297,6 @@ export default {
     },
 
     updateChart() {
-      // if (!this.productData) {
-      //   console.warn('No product data available. Skipping chart update.');
-      //   return;
-      // }
-
-      // const [startDate, endDate] = this.value1.map((date) => new Date(date));
-      // const combinedData = [];
-      // let annotations = [];
-
-      // const platform = this.productData.platform;
-
-      // if (!platform) {
-      //   console.warn('No platform data found');
-      //   return;
-      // }
-
-      //   const platformData = this.productData;
-      //   if (!platformData) {
-      //     console.warn(`No platform data found for platform: ${platform}`);
-      //     return;
-      //   }
-
-      //   const dataByDate = platformData.sessions.reduce((acc, item) => {
-      //     const dateStr = new Date(item.date).toISOString().split('T')[0];
-      //     acc[dateStr] = item.value;
-      //     return acc;
-      //   }, {});
-
-      //   const filledData = [];
-      //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      //     const dateStr = d.toISOString().split('T')[0];
-      //     filledData.push({
-      //       x: new Date(dateStr).getTime(),
-      //       y: dataByDate[dateStr] || 0,
-      //     });
-      //   }
-        
-
-      //   const chartData = [{
-      //     name: `${this.productData.sdk} - ${platformData.platform}`,
-      //     data: filledData,
-      //   }];
-
-      //   this.chartStore.updateChart(chartData, []);
 
       if (!this.productData) {
         console.warn('No product data available. Skipping chart update.');
@@ -377,27 +333,10 @@ export default {
       });
 
 
-      // if (platformData.ips && platformData.ips.length > 0) {
-      //   const uniqueIpsByDate = platformData.ips.reduce((acc, item) => {
-      //     const dateStr = new Date(item.date).toISOString().split('T')[0];
-      //     acc[dateStr] = (acc[dateStr] || 0) + 1; 
-      //     return acc;
-      //   }, {});
-
-      //   const ipsData = [];
-      //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      //     const dateStr = d.toISOString().split('T')[0];
-      //     ipsData.push({
-      //       x: new Date(dateStr).getTime(),
-      //       y: uniqueIpsByDate[dateStr] || 0,
-      //     });
-      //   }
-
       if (platformData.ips && platformData.ips.length > 0) {
         const ipsByDate = platformData.ips.reduce((acc, item) => {
           const dateStr = new Date(item.date).toISOString().split('T')[0];
-          if (!acc[dateStr]) acc[dateStr] = [];
-          acc[dateStr].push(item.value);
+          acc[dateStr] = item.value;
           return acc;
         }, {});
 
@@ -406,8 +345,7 @@ export default {
           const dateStr = d.toISOString().split('T')[0];
           ipsData.push({
             x: new Date(dateStr).getTime(),
-            y: ipsByDate[dateStr]?.length || 0, 
-            ips: ipsByDate[dateStr] || [], 
+            y: ipsByDate[dateStr] || 0, 
           });
         }
 

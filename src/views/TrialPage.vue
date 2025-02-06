@@ -138,7 +138,7 @@ export default {
         console.log(response)
           
         if (response.data.result === 'OK') {
-          this.$router.push('/');
+          this.$router.push('/cp/dashboard');
         } else if (response.data.result === 'error') {
           this.errors.general = response.data.message || 'Something went wrong. Please try again.';
         }
