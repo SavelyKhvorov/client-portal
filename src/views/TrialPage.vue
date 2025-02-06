@@ -2,8 +2,8 @@
   <div class="trial">
     <div class="trial__container">
       <div class="trial__card">
-        <h1 class="trial__title">Get Free Trial</h1>
-        <p class="trial__subtitle">Submit the form to get full-featured SDK packages and Pricing:</p>
+        <h1 class="trial__title">Request Trial</h1>
+        <p class="trial__subtitle">Submit the form to get full-featured SDK</p>
 
         <div v-if="errors.general" class="form__general-error">
           {{ errors.general }}
@@ -12,7 +12,50 @@
         <form class="trial__form" @submit.prevent="handleTrial" novalidate>
 
           <div class="form__group">
-            <label class="form__label" for="end-users">Number of End Users</label>
+            <label class="form__label">Platform:</label>
+            <div class="radio-group">
+              <div class="radio-column">
+                <label v-for="(option, index) in platforms.slice(0, Math.ceil(platforms.length / 2))" :key="option" class="radio-item">
+                  <input 
+                    type="radio" 
+                    :value="option" 
+                    v-model="selectedPlatforms" 
+                    :disabled="isSubscribed(option)" 
+                  >
+                  {{ option }}
+                  <span v-if="isSubscribed(option)" class="already-subscribed">(Already subscribed)</span>
+                </label>
+              </div>
+              <div class="radio-column">
+                <label v-for="(option, index) in platforms.slice(Math.ceil(platforms.length / 2))" :key="option" class="radio-item">
+                  <input 
+                    type="radio" 
+                    :value="option" 
+                    v-model="selectedPlatforms" 
+                    :disabled="isSubscribed(option)" 
+                  >
+                  {{ option }}
+                  <span v-if="isSubscribed(option)" class="already-subscribed">(Already subscribed)</span>
+                </label>
+              </div>
+            </div>
+            <p v-if="errors.selectedPlatforms" class="form__error">{{ errors.selectedPlatforms }}</p>
+          </div>
+
+
+          <div class="form__group">
+            <label class="form__label">SDK:</label>
+            <div class="checkbox-group">
+              <label v-for="option in SDK" :key="option" class="checkbox-item">
+                <input type="checkbox" v-model="selectedSDK" :value="option"> {{ option }}
+              </label>
+            </div>
+            <p v-if="errors.selectedSDK" class="form__error">{{ errors.selectedSDK }}</p>
+          </div>
+
+
+          <div class="form__group">
+            <label class="form__label" for="end-users">Estimate of your users on this platform</label>
             <select id="end-users" v-model="endUsers" class="form__input" :class="{'input-error': errors.endUsers}" required>
               <option disabled value="">Select</option>
               <option><100</option>
@@ -25,33 +68,12 @@
           </div>
 
           <div class="form__group">
-            <label class="form__label">Platform:</label>
-            <div class="checkbox-group">
-              <label v-for="option in platforms" :key="option" class="checkbox-item">
-                <input type="checkbox" v-model="selectedPlatforms" :value="option"> {{ option }}
-              </label>
-            </div>
-            <p v-if="errors.selectedPlatforms" class="form__error">{{ errors.selectedPlatforms }}</p>
-          </div>
-
-          <!-- Features Selection -->
-          <div class="form__group">
-            <label class="form__label">Features:</label>
-            <div class="checkbox-group">
-              <label v-for="option in features" :key="option" class="checkbox-item">
-                <input type="checkbox" v-model="selectedFeatures" :value="option"> {{ option }}
-              </label>
-            </div>
-            <p v-if="errors.selectedFeatures" class="form__error">{{ errors.selectedFeatures }}</p>
-          </div>
-
-          <div class="form__group">
             <label class="form__label" for="project">Project Description</label>
             <textarea id="project" v-model="projectDescription" class="form__input textarea" rows="4"></textarea>
           </div>
 
           <div class="form__actions">
-            <button type="submit" class="btn btn-trial">Get Demo SDK and Pricing</button>
+            <button type="submit" class="btn btn-trial">Get Free Trial</button>
           </div>
         </form>
       </div>
@@ -65,15 +87,15 @@ export default {
     return {
       endUsers: '',
       selectedPlatforms: [],
-      selectedFeatures: [],
+      selectedSDK: [],
       projectDescription: '',
       errors: {},
       platforms: ['Web', 'Android', 'iOS', 'Win', 'Mac', 'Linux'],
-      features: [
-        'Blur/Replace/Remove Background', 'Smart Zoom', 'Auto Framing',
-        'Beautification', 'Sharpness', 'Low Light', 'Color Correction',
-        'Lower Thirds', 'Layouts', 'Objects (Emoji)', 'Overlays', 'Noise Remover'
-      ]
+      SDK: [
+        'Video SDK (Blur/Replace/Remove Background, Smart Zoom, Auto Framing, Beautification, Sharpness and more)',
+        'Audio SDK (Noise Cancellation)'
+      ],
+      subscriptions: [], 
     };
   },
   methods: {
@@ -81,7 +103,7 @@ export default {
       this.errors = {};
       if (!this.endUsers) this.errors.endUsers = "Select number of end users";
       if (this.selectedPlatforms.length === 0) this.errors.selectedPlatforms = "Select at least one platform";
-      if (this.selectedFeatures.length === 0) this.errors.selectedFeatures = "Select at least one feature";
+      if (this.selectedSDK.length === 0) this.errors.selectedSDK = "Select at least one SDK";
     },
 
     async handleTrial() {
@@ -91,12 +113,14 @@ export default {
       const payload = {
         endUsers: this.endUsers,
         platforms: this.selectedPlatforms,
-        features: this.selectedFeatures,
+        SDK: this.selectedSDK,
         projectDescription: this.projectDescription
       };
 
       try {
         const response = await this.$axios.post('/api/cp/get-free-trial', payload);
+
+        console.log(response)
           
         if (response.data.result === 'OK') {
           this.$router.push('/');
@@ -107,7 +131,35 @@ export default {
         console.error('An error occurred:', error);
         this.errors.general = 'Something went wrong. Please try again later.';
       }
+    },
+
+    async fetchSubscriptions() {
+      try {
+        const response = await this.$axios.get("/api/cp/products");
+        if (response.data.result === "OK") {
+          this.subscriptions = response.data.response;
+
+          const subscribedPlatforms = this.subscriptions.map(sub => sub.platform.toLowerCase());
+          this.selectedPlatforms = this.platforms.filter(platform => subscribedPlatforms.includes(platform.toLowerCase()));
+        }
+      } catch (error) {
+        console.error('Failed to fetch subscriptions:', error);
+        this.errors.general = 'Failed to load your subscriptions. Please try again later.';
+      }
+    },
+
+    isSubscribed(platform) {
+      return this.subscriptions.some(sub => sub.platform.toLowerCase() === platform.toLowerCase());
+    },
+
+    handlePlatformChange(platform) {
+      if (this.isSubscribed(platform)) {
+        this.selectedPlatforms.push(platform);
+      }
     }
+  },
+  created() {
+    this.fetchSubscriptions();
   }
 };
 </script>
@@ -148,12 +200,33 @@ export default {
 }
 
 .checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
 .checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-item input[type="checkbox"] {
+  flex-shrink: 0;
+}
+
+.radio-group {
+  display: flex;
+  gap: 25px;
+}
+
+.radio-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-item {
   display: flex;
   align-items: center;
   gap: 8px;
