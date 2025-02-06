@@ -29,7 +29,7 @@
                   <input 
                     type="radio" 
                     :value="option" 
-                    v-model="selectedPlatforms" 
+                    v-model="selectedPlatform" 
                     :disabled="isSubscribed(option)" 
                   >
                   {{ option }}
@@ -41,7 +41,7 @@
                   <input 
                     type="radio" 
                     :value="option" 
-                    v-model="selectedPlatforms" 
+                    v-model="selectedPlatform" 
                     :disabled="isSubscribed(option)" 
                   >
                   {{ option }}
@@ -49,18 +49,18 @@
                 </label>
               </div>
             </div>
-            <p v-if="errors.selectedPlatforms" class="form__error">{{ errors.selectedPlatforms }}</p>
+            <p v-if="errors.selectedPlatform" class="form__error">{{ errors.selectedPlatform }}</p>
           </div>
 
 
           <div class="form__group">
-            <label class="form__label">SDK:</label>
+            <label class="form__label">SDKs:</label>
             <div class="checkbox-group">
-              <label v-for="option in SDK" :key="option" class="checkbox-item">
-                <input type="checkbox" v-model="selectedSDK" :value="option"> {{ option }}
+              <label v-for="option in SDKs" :key="option" class="checkbox-item">
+                <input type="checkbox" v-model="selectedSDKs" :value="option"> {{ option }}
               </label>
             </div>
-            <p v-if="errors.selectedSDK" class="form__error">{{ errors.selectedSDK }}</p>
+            <p v-if="errors.selectedSDKs" class="form__error">{{ errors.selectedSDKs }}</p>
           </div>
 
 
@@ -96,12 +96,12 @@ export default {
   data() {
     return {
       endUsers: '',
-      selectedPlatforms: [],
-      selectedSDK: [],
+      selectedPlatform: [],
+      selectedSDKs: [],
       projectDescription: '',
       errors: {},
       platforms: ['Web', 'Android', 'iOS', 'Win', 'Mac', 'Linux'],
-      SDK: [
+      SDKs: [
         'Video SDK (Blur/Replace/Remove Background, Smart Zoom, Auto Framing, Beautification, Sharpness and more)',
         'Audio SDK (Noise Cancellation)'
       ],
@@ -112,18 +112,23 @@ export default {
     validateForm() {
       this.errors = {};
       if (!this.endUsers) this.errors.endUsers = "Select number of end users";
-      if (this.selectedPlatforms.length === 0) this.errors.selectedPlatforms = "Select at least one platform";
-      if (this.selectedSDK.length === 0) this.errors.selectedSDK = "Select at least one SDK";
+      if (this.selectedPlatform.length === 0) this.errors.selectedPlatform = "Select at least one platform";
+      if (this.selectedSDKs.length === 0) this.errors.selectedSDKs = "Select at least one SDK";
     },
 
     async handleTrial() {
       this.validateForm();
       if (Object.keys(this.errors).length > 0) return;
 
+      const formattedSDKs = this.selectedSDKs.map(sdk => 
+        sdk.toLowerCase().includes('video') ? 'video' : 
+        sdk.toLowerCase().includes('audio') ? 'audio' : ''
+      ).filter(Boolean);
+
       const payload = {
         endUsers: this.endUsers,
-        platforms: this.selectedPlatforms,
-        SDK: this.selectedSDK,
+        platform: this.selectedPlatform,
+        SDKs: formattedSDKs,
         projectDescription: this.projectDescription
       };
 
@@ -150,7 +155,7 @@ export default {
           this.subscriptions = response.data.response;
 
           const subscribedPlatforms = this.subscriptions.map(sub => sub.platform.toLowerCase());
-          this.selectedPlatforms = this.platforms.filter(platform => subscribedPlatforms.includes(platform.toLowerCase()));
+          this.selectedPlatform = this.platforms.filter(platform => subscribedPlatforms.includes(platform.toLowerCase()));
         }
       } catch (error) {
         console.error('Failed to fetch subscriptions:', error);
@@ -164,12 +169,18 @@ export default {
 
     handlePlatformChange(platform) {
       if (this.isSubscribed(platform)) {
-        this.selectedPlatforms.push(platform);
+        this.selectedPlatform.push(platform);
       }
     }
   },
   created() {
     this.fetchSubscriptions();
+  },
+  computed: {
+    isAuthenticated() {
+      const authStore = useAuthStore();
+      return authStore.isAuthenticated;
+    }
   }
 };
 </script>

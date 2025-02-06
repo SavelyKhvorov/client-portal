@@ -14,9 +14,9 @@ const routes = [
   { path: '/cp/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
   { path: '/cp/reset-password/:token', name: 'ResetPassword', component: ResetPassword },
   { path: '/cp/registration', name: 'Registration', component: Registration},
-  { path: '/cp/get-free-trial', name: 'Trial', component: Trial},
+  { path: '/cp/get-free-trial', name: 'Trial', component: Trial, meta: { requiresAuth: true } },
   { path: '/cp/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
-  { path: '/cp/total-analytics', name: 'TotalAnalytics', component: TotalAnalytics, meta: { requiresAuth: true }  },
+  { path: '/cp/total-analytics', name: 'TotalAnalytics', component: TotalAnalytics, meta: { requiresAuth: true } },
   { path: '/cp/product/:id', name: 'ProductDetails', component: () => import("@/views/product/[id].vue"), meta: { requiresAuth: true } },
 ];
 
