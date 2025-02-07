@@ -65,8 +65,7 @@ export default {
       }
 
       try {
-        // await getToken();
-        const response = await this.$axios.post("api/cp/forgot-password", {
+        const response = await this.$axios.post("/api/cp/forgot-password", {
           email: this.email
         });
 
@@ -125,7 +124,6 @@ export default {
     text-align: left;
   }
 }
-
 .alert {
   padding: 12px 16px;
   border-radius: 8px;
